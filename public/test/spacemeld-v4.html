@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpaceMeld — Explore the Cosmos</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --deep: #020409;
+    --navy: #050d1a;
+    --purple: #0f0628;
+    --glow-blue: #00cfff;
+    --glow-purple: #a855f7;
+    --glow-teal: #06ffa5;
+    --glow-amber: #f59e0b;
+    --glow-red: #ff4d6d;
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed; width: 12px; height: 12px;
+    background: var(--glow-blue); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.15s ease, background 0.3s;
+    box-shadow: 0 0 12px var(--glow-blue), 0 0 24px var(--glow-blue);
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1px solid rgba(0, 207, 255, 0.4); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transition: transform 0.4s cubic-bezier(0.17,0.67,0.35,1.1), opacity 0.3s;
+    transform: translate(-50%, -50%);
+  }
+
+  /* STAR CANVAS */
+  #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+  /* NEBULA BLOBS */
+  .nebula {
+    position: fixed; border-radius: 50%; filter: blur(80px);
+    pointer-events: none; z-index: 0; animation: nebulaDrift 20s ease-in-out infinite alternate;
+  }
+  .nebula-1 { width: 600px; height: 600px; background: rgba(168,85,247,0.12); top: -200px; right: -100px; animation-delay: 0s; }
+  .nebula-2 { width: 500px; height: 500px; background: rgba(0,207,255,0.08); bottom: 20%; left: -150px; animation-delay: -7s; }
+  .nebula-3 { width: 400px; height: 400px; background: rgba(6,255,165,0.06); top: 40%; right: 10%; animation-delay: -14s; }
+
+  @keyframes nebulaDrift {
+    0% { transform: scale(1) translate(0,0); }
+    100% { transform: scale(1.15) translate(30px, -40px); }
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.25rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(2,4,9,0.9), transparent);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', monospace; font-weight: 900; font-size: 1.5rem;
+    color: #fff; letter-spacing: 0.08em; text-decoration: none;
+  }
+  .nav-logo span { color: var(--glow-blue); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: rgba(226,232,240,0.7); text-decoration: none; font-size: 0.85rem;
+    letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600;
+    transition: color 0.3s, text-shadow 0.3s;
+  }
+  .nav-links a:hover { color: var(--glow-blue); text-shadow: 0 0 16px var(--glow-blue); }
+  .nav-cta {
+    background: transparent; border: 1px solid var(--glow-blue);
+    color: var(--glow-blue); padding: 0.55rem 1.4rem;
+    font-family: 'Orbitron', monospace; font-size: 0.75rem; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: none; border-radius: 4px;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  .nav-cta:hover { background: rgba(0,207,255,0.12); box-shadow: 0 0 20px rgba(0,207,255,0.4); }
+
+  /* SECTIONS */
+  section { position: relative; z-index: 1; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 6rem 2rem 4rem;
+    flex-direction: column; gap: 2rem;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.35);
+    padding: 0.4rem 1rem; border-radius: 100px;
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: #c084fc;
+    animation: fadeSlideDown 0.8s ease both;
+  }
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: #a855f7; box-shadow: 0 0 8px #a855f7;
+    animation: pulse 1.5s ease infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.5); } }
+
+  .hero-title {
+    font-family: 'Orbitron', monospace; font-weight: 900;
+    font-size: clamp(3rem, 8vw, 7rem); line-height: 1.05;
+    letter-spacing: 0.02em; animation: fadeSlideUp 1s ease 0.2s both;
+  }
+  .hero-title .line1 { display: block; color: #fff; }
+  .hero-title .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--glow-blue), var(--glow-purple), var(--glow-teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; animation: shimmer 4s linear infinite;
+    background-size: 200% auto;
+  }
+  @keyframes shimmer { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+
+  .hero-sub {
+    max-width: 560px; font-size: 1.1rem; color: rgba(226,232,240,0.65);
+    line-height: 1.8; font-weight: 300;
+    animation: fadeSlideUp 1s ease 0.4s both;
+  }
+  .hero-actions {
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    animation: fadeSlideUp 1s ease 0.6s both;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #00cfff, #a855f7);
+    color: #000; padding: 0.9rem 2.2rem; border: none; border-radius: 6px;
+    font-family: 'Orbitron', monospace; font-weight: 700; font-size: 0.85rem;
+    letter-spacing: 0.1em; text-transform: uppercase; cursor: none;
+    position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 0 30px rgba(0,207,255,0.4);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(0,207,255,0.7); }
+  .btn-primary::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.3));
+    transform: translateX(-100%) skewX(-20deg);
+    transition: transform 0.5s;
+  }
+  .btn-primary:hover::after { transform: translateX(100%) skewX(-20deg); }
+  .btn-secondary {
+    background: transparent; border: 1px solid rgba(226,232,240,0.2);
+    color: var(--text); padding: 0.9rem 2.2rem; border-radius: 6px;
+    font-family: 'Orbitron', monospace; font-size: 0.85rem; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: none; transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .btn-secondary:hover { border-color: rgba(168,85,247,0.5); box-shadow: 0 0 20px rgba(168,85,247,0.2); }
+
+  .hero-scroll {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    animation: fadeSlideUp 1s ease 1s both;
+  }
+  .scroll-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, rgba(0,207,255,0.6), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine { 0%,100% { opacity:0.3; transform:scaleY(0.5) translateY(-10px); } 50% { opacity:1; transform:scaleY(1) translateY(0); } }
+
+  /* PLANET */
+  .planet-wrap {
+    position: absolute; right: 8%; top: 50%; transform: translateY(-50%);
+    animation: planetFloat 8s ease-in-out infinite;
+  }
+  @keyframes planetFloat { 0%,100%{transform:translateY(-50%) rotate(0deg);} 50%{transform:translateY(calc(-50% - 20px)) rotate(5deg);} }
+  .planet-svg { width: 320px; height: 320px; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .stat-item {
+    padding: 2.5rem 2rem; text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.3s;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-item:hover { background: rgba(0,207,255,0.04); }
+  .stat-num {
+    font-family: 'Orbitron', monospace; font-size: 2.5rem; font-weight: 900;
+    background: linear-gradient(135deg, var(--glow-blue), var(--glow-purple));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    display: block; line-height: 1.1;
+  }
+  .stat-label { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-top: 0.4rem; }
+
+  /* MISSIONS */
+  .missions { padding: 7rem 4rem; }
+  .section-eyebrow {
+    font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--glow-blue); font-weight: 700; margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--glow-blue); }
+  .section-title { font-family: 'Orbitron', monospace; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; margin-bottom: 1rem; }
+  .section-sub { color: rgba(226,232,240,0.55); max-width: 480px; line-height: 1.8; font-size: 0.95rem; margin-bottom: 3.5rem; }
+
+  .mission-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; }
+  .mission-card {
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+    padding: 2.5rem; position: relative; overflow: hidden;
+    transition: border-color 0.3s, background 0.3s, transform 0.3s;
+  }
+  .mission-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent, var(--glow-blue)), transparent);
+    transform: scaleX(0); transition: transform 0.4s ease;
+  }
+  .mission-card:hover { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); transform: translateY(-4px); }
+  .mission-card:hover::before { transform: scaleX(1); }
+
+  .mission-icon {
+    width: 52px; height: 52px; margin-bottom: 1.5rem;
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,207,255,0.1); border: 1px solid rgba(0,207,255,0.2);
+  }
+  .mission-icon svg { width: 26px; height: 26px; }
+  .mission-num {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    font-family: 'Orbitron', monospace; font-size: 0.6rem;
+    color: rgba(255,255,255,0.12); letter-spacing: 0.1em;
+  }
+  .mission-name { font-family: 'Orbitron', monospace; font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .mission-desc { font-size: 0.88rem; color: rgba(226,232,240,0.55); line-height: 1.75; }
+  .mission-tag {
+    display: inline-block; margin-top: 1.25rem; padding: 0.25rem 0.75rem;
+    border-radius: 100px; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  /* ORBIT VISUALIZER */
+  .orbit-section { padding: 7rem 4rem; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 6rem; }
+  .orbit-visual { position: relative; width: 100%; padding-bottom: 100%; }
+  .orbit-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* TECH GRID */
+  .tech-section { padding: 7rem 4rem; }
+  .tech-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: rgba(255,255,255,0.04); margin-top: 3.5rem; }
+  .tech-item {
+    background: var(--deep); padding: 2rem 1.5rem; text-align: center;
+    transition: background 0.3s;
+  }
+  .tech-item:hover { background: rgba(255,255,255,0.04); }
+  .tech-logo { font-family: 'Orbitron', monospace; font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; display: block; margin-top: 0.75rem; }
+  .tech-icon { font-size: 2rem; display: block; }
+
+  /* TIMELINE */
+  .timeline-section { padding: 7rem 4rem; }
+  .timeline { position: relative; margin-top: 3rem; }
+  .timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:1px; background:linear-gradient(to bottom, transparent, var(--glow-blue), var(--glow-purple), transparent); }
+  .timeline-item { padding-left: 3rem; margin-bottom: 3rem; position: relative; }
+  .timeline-dot {
+    position: absolute; left: -6px; top: 4px;
+    width: 13px; height: 13px; border-radius: 50%;
+    background: var(--glow-blue); box-shadow: 0 0 16px var(--glow-blue);
+    animation: dotPulse 2s ease infinite;
+  }
+  @keyframes dotPulse { 0%,100%{box-shadow:0 0 8px var(--glow-blue);} 50%{box-shadow:0 0 20px var(--glow-blue), 0 0 40px rgba(0,207,255,0.4);} }
+  .timeline-year { font-family: 'Orbitron', monospace; font-size: 0.7rem; color: var(--glow-blue); letter-spacing: 0.15em; margin-bottom: 0.4rem; }
+  .timeline-event { font-family: 'Orbitron', monospace; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .timeline-detail { font-size: 0.88rem; color: rgba(226,232,240,0.55); line-height: 1.75; max-width: 480px; }
+
+  /* CTA */
+  .cta-section {
+    padding: 7rem 4rem; text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(168,85,247,0.12), transparent);
+    pointer-events: none;
+  }
+  .cta-title { font-family: 'Orbitron', monospace; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; margin-bottom: 1.25rem; line-height: 1.1; }
+  .cta-sub { color: rgba(226,232,240,0.55); font-size: 1rem; margin-bottom: 2.5rem; line-height: 1.8; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 3rem 4rem; display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  footer p { font-size: 0.78rem; color: var(--muted); }
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a { font-size: 0.78rem; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--glow-blue); }
+
+  /* ANIMATIONS */
+  @keyframes fadeSlideUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeSlideDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 5rem 1.5rem 3rem; }
+    .planet-wrap { display: none; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .missions { padding: 4rem 1.5rem; }
+    .mission-grid { grid-template-columns: 1fr; }
+    .orbit-section { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 3rem; }
+    .orbit-visual { padding-bottom: 80%; }
+    .tech-grid { grid-template-columns: repeat(3, 1fr); }
+    .timeline-section { padding: 4rem 1.5rem; }
+    .cta-section { padding: 4rem 1.5rem; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Nebula -->
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+
+<!-- Star Canvas -->
+<canvas id="starfield"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Space<span>Meld</span></a>
+  <ul class="nav-links">
+    <li><a href="#missions">Missions</a></li>
+    <li><a href="#systems">Systems</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta">Launch Portal</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🛰 Next Mission: Artemis VII — T-minus 47 days</div>
+  <h1 class="hero-title">
+    <span class="line1">Beyond the</span>
+    <span class="line2">Event Horizon</span>
+  </h1>
+  <p class="hero-sub">SpaceMeld pioneers humanity's expansion into deep space. Advanced propulsion, AI-guided navigation, and real-time cosmic data fusion.</p>
+  <div class="hero-actions">
+    <button class="btn-primary">Explore Missions</button>
+    <button class="btn-secondary">View Live Data</button>
+  </div>
+  <div class="hero-scroll">
+    <span class="scroll-label">Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+
+  <!-- Animated Planet -->
+  <div class="planet-wrap">
+    <svg class="planet-svg" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="pg" cx="38%" cy="32%" r="60%">
+          <stop offset="0%" stop-color="#1e3a5f"/>
+          <stop offset="40%" stop-color="#0a1628"/>
+          <stop offset="100%" stop-color="#020812"/>
+        </radialGradient>
+        <radialGradient id="atm" cx="50%" cy="50%" r="52%">
+          <stop offset="80%" stop-color="transparent"/>
+          <stop offset="100%" stop-color="rgba(0,207,255,0.18)"/>
+        </radialGradient>
+        <filter id="gf" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="8" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <clipPath id="pc"><circle cx="160" cy="160" r="128"/></clipPath>
+      </defs>
+
+      <!-- Planet glow halo -->
+      <circle cx="160" cy="160" r="145" fill="none" stroke="rgba(0,207,255,0.06)" stroke-width="24"/>
+      <circle cx="160" cy="160" r="135" fill="none" stroke="rgba(0,207,255,0.1)" stroke-width="8"/>
+
+      <!-- Planet body -->
+      <circle cx="160" cy="160" r="128" fill="url(#pg)"/>
+
+      <!-- Surface detail -->
+      <g clip-path="url(#pc)">
+        <ellipse cx="110" cy="140" rx="60" ry="18" fill="rgba(6,255,165,0.06)" transform="rotate(-20 110 140)"/>
+        <ellipse cx="200" cy="180" rx="80" ry="14" fill="rgba(0,207,255,0.06)" transform="rotate(10 200 180)"/>
+        <ellipse cx="155" cy="220" rx="90" ry="12" fill="rgba(168,85,247,0.07)" transform="rotate(-5 155 220)"/>
+        <ellipse cx="130" cy="100" rx="50" ry="8" fill="rgba(6,255,165,0.04)" transform="rotate(-10 130 100)"/>
+        <!-- Continent-like shapes -->
+        <path d="M80 130 Q100 110 140 120 Q160 115 175 135 Q165 155 140 150 Q110 158 85 145 Z" fill="rgba(0,150,120,0.15)"/>
+        <path d="M190 100 Q210 90 230 105 Q235 125 215 130 Q195 125 190 110 Z" fill="rgba(0,150,120,0.12)"/>
+        <path d="M100 180 Q130 175 150 185 Q155 200 130 205 Q105 200 100 190 Z" fill="rgba(0,150,120,0.1)"/>
+      </g>
+
+      <!-- Atmosphere rim -->
+      <circle cx="160" cy="160" r="128" fill="url(#atm)"/>
+
+      <!-- Ring system -->
+      <g transform="translate(160,160)">
+        <ellipse cx="0" cy="0" rx="190" ry="28" fill="none" stroke="rgba(0,207,255,0.15)" stroke-width="14" transform="rotate(-20)"/>
+        <ellipse cx="0" cy="0" rx="190" ry="28" fill="none" stroke="rgba(0,207,255,0.08)" stroke-width="6" transform="rotate(-20)"/>
+        <ellipse cx="0" cy="0" rx="170" ry="22" fill="none" stroke="rgba(168,85,247,0.12)" stroke-width="8" transform="rotate(-20)"/>
+      </g>
+
+      <!-- Moon -->
+      <circle cx="272" cy="92" r="14" fill="#1a2a3a"/>
+      <circle cx="272" cy="92" r="14" fill="rgba(0,207,255,0.05)"/>
+      <circle cx="268" cy="88" r="4" fill="rgba(0,0,0,0.4)"/>
+
+      <!-- Stars behind planet -->
+      <circle cx="40" cy="50" r="1.5" fill="rgba(255,255,255,0.6)"/>
+      <circle cx="280" cy="260" r="1" fill="rgba(255,255,255,0.5)"/>
+      <circle cx="290" cy="40" r="1" fill="rgba(255,255,255,0.4)"/>
+      <circle cx="20" cy="250" r="1.5" fill="rgba(255,255,255,0.5)"/>
+      <circle cx="60" cy="280" r="1" fill="rgba(255,255,255,0.3)"/>
+    </svg>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar reveal">
+  <div class="stat-item">
+    <span class="stat-num" id="s1">0</span>
+    <span class="stat-label">Missions Launched</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num" id="s2">0</span>
+    <span class="stat-label">Light-years Mapped</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num" id="s3">0</span>
+    <span class="stat-label">Data Points Daily</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num" id="s4">0</span>
+    <span class="stat-label">Countries Partnered</span>
+  </div>
+</div>
+
+<!-- MISSIONS -->
+<section class="missions" id="missions">
+  <div class="section-eyebrow reveal">Active Operations</div>
+  <h2 class="section-title reveal">Current Missions</h2>
+  <p class="section-sub reveal">Each mission expands our reach into the unknown, driven by precision engineering and relentless curiosity.</p>
+
+  <div class="mission-grid reveal">
+    <div class="mission-card" style="--accent: #00cfff;">
+      <span class="mission-num">01</span>
+      <div class="mission-icon" style="background:rgba(0,207,255,0.1);border-color:rgba(0,207,255,0.2);">
+        <svg viewBox="0 0 26 26" fill="none" stroke="#00cfff" stroke-width="1.5"><path d="M13 2L8 12H2L7 17L5 24L13 19L21 24L19 17L24 12H18Z"/></svg>
+      </div>
+      <h3 class="mission-name">Artemis VII</h3>
+      <p class="mission-desc">Crewed lunar south pole mission to establish a permanent habitat and extract water ice for deep-space fuel synthesis.</p>
+      <span class="mission-tag" style="background:rgba(0,207,255,0.1);color:#00cfff;border:1px solid rgba(0,207,255,0.2);">In Preparation</span>
+    </div>
+    <div class="mission-card" style="--accent: #a855f7;">
+      <span class="mission-num">02</span>
+      <div class="mission-icon" style="background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.2);">
+        <svg viewBox="0 0 26 26" fill="none" stroke="#a855f7" stroke-width="1.5"><circle cx="13" cy="13" r="10"/><path d="M13 3v4M13 19v4M3 13h4M19 13h4"/><circle cx="13" cy="13" r="3"/></svg>
+      </div>
+      <h3 class="mission-name">Helios Probe</h3>
+      <p class="mission-desc">Unmanned solar dive to within 4 million km of the Sun, capturing unprecedented coronal mass ejection data.</p>
+      <span class="mission-tag" style="background:rgba(168,85,247,0.1);color:#c084fc;border:1px solid rgba(168,85,247,0.2);">Active — Sol Orbit</span>
+    </div>
+    <div class="mission-card" style="--accent: #06ffa5;">
+      <span class="mission-num">03</span>
+      <div class="mission-icon" style="background:rgba(6,255,165,0.08);border-color:rgba(6,255,165,0.2);">
+        <svg viewBox="0 0 26 26" fill="none" stroke="#06ffa5" stroke-width="1.5"><rect x="3" y="8" width="20" height="14" rx="2"/><path d="M8 8V6a5 5 0 0110 0v2"/><circle cx="13" cy="15" r="2"/></svg>
+      </div>
+      <h3 class="mission-name">Europa Dive</h3>
+      <p class="mission-desc">Submersible probe penetrating Europa's ice shell to search for microbial life in its vast subsurface ocean.</p>
+      <span class="mission-tag" style="background:rgba(6,255,165,0.08);color:#06ffa5;border:1px solid rgba(6,255,165,0.2);">Design Phase</span>
+    </div>
+    <div class="mission-card" style="--accent: #f59e0b;">
+      <span class="mission-num">04</span>
+      <div class="mission-icon" style="background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2);">
+        <svg viewBox="0 0 26 26" fill="none" stroke="#f59e0b" stroke-width="1.5"><path d="M13 2v4M13 20v4M2 13h4M20 13h4"/><circle cx="13" cy="13" r="6"/><path d="M17 9l2-2M7 17l-2 2M17 17l2 2M7 9l-2-2"/></svg>
+      </div>
+      <h3 class="mission-name">Titan Glider</h3>
+      <p class="mission-desc">Atmospheric glider mapping Titan's methane lakes with radar imaging and spectrographic analysis from low altitude.</p>
+      <span class="mission-tag" style="background:rgba(245,158,11,0.08);color:#f59e0b;border:1px solid rgba(245,158,11,0.2);">Funded</span>
+    </div>
+    <div class="mission-card" style="--accent: #ff4d6d;">
+      <span class="mission-num">05</span>
+      <div class="mission-icon" style="background:rgba(255,77,109,0.08);border-color:rgba(255,77,109,0.2);">
+        <svg viewBox="0 0 26 26" fill="none" stroke="#ff4d6d" stroke-width="1.5"><polygon points="13,2 24,22 2,22"/><line x1="13" y1="9" x2="13" y2="15"/><circle cx="13" cy="19" r="1"/></svg>
+      </div>
+      <h3 class="mission-name">Ouroboros Relay</h3>
+      <p class="mission-desc">Autonomous relay network spanning 50 AU to enable near-real-time communication with outer solar system probes.</p>
+      <span class="mission-tag" style="background:rgba(255,77,109,0.08);color:#ff4d6d;border:1px solid rgba(255,77,109,0.2);">Concept</span>
+    </div>
+    <div class="mission-card" style="--accent: #818cf8;">
+      <span class="mission-num">06</span>
+      <div class="mission-icon" style="background:rgba(129,140,248,0.08);border-color:rgba(129,140,248,0.2);">
+        <svg viewBox="0 0 26 26" fill="none" stroke="#818cf8" stroke-width="1.5"><circle cx="13" cy="13" r="4"/><path d="M13 9V2M13 24v-7M9 13H2M24 13h-7"/><circle cx="13" cy="13" r="8"/></svg>
+      </div>
+      <h3 class="mission-name">Centauri Watch</h3>
+      <p class="mission-desc">Space-based interferometric telescope cluster targeting Alpha Centauri for exoplanet atmospheric biosignature detection.</p>
+      <span class="mission-tag" style="background:rgba(129,140,248,0.08);color:#818cf8;border:1px solid rgba(129,140,248,0.2);">Research</span>
+    </div>
+  </div>
+</section>
+
+<!-- ORBIT SECTION -->
+<section class="orbit-section" id="systems">
+  <div>
+    <div class="section-eyebrow reveal">Navigation Core</div>
+    <h2 class="section-title reveal">Orbital<br>Mechanics AI</h2>
+    <p class="section-sub reveal">Our proprietary AI system calculates optimal trajectories in real time, accounting for gravitational influences of every body in the solar system.</p>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:1rem;" class="reveal">
+      <li style="display:flex;gap:1rem;align-items:flex-start;">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--glow-blue);box-shadow:0 0 8px var(--glow-blue);margin-top:6px;flex-shrink:0;"></span>
+        <span style="font-size:0.9rem;color:rgba(226,232,240,0.7);line-height:1.7;">N-body simulation with 10⁻¹² precision across the entire solar system in under 40ms</span>
+      </li>
+      <li style="display:flex;gap:1rem;align-items:flex-start;">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--glow-purple);box-shadow:0 0 8px var(--glow-purple);margin-top:6px;flex-shrink:0;"></span>
+        <span style="font-size:0.9rem;color:rgba(226,232,240,0.7);line-height:1.7;">Autonomous delta-v budget optimization with 6-month lookahead planning</span>
+      </li>
+      <li style="display:flex;gap:1rem;align-items:flex-start;">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--glow-teal);box-shadow:0 0 8px var(--glow-teal);margin-top:6px;flex-shrink:0;"></span>
+        <span style="font-size:0.9rem;color:rgba(226,232,240,0.7);line-height:1.7;">Redundant comm links with quantum-encrypted telemetry channels across all assets</span>
+      </li>
+    </ul>
+  </div>
+  <div class="orbit-visual reveal">
+    <svg class="orbit-svg" viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff3aa"/>
+          <stop offset="60%" stop-color="#f59e0b"/>
+          <stop offset="100%" stop-color="#d97706"/>
+        </radialGradient>
+        <filter id="sunGlow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="planetGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+
+      <!-- Orbit rings -->
+      <ellipse cx="210" cy="210" rx="60" ry="60" fill="none" stroke="rgba(0,207,255,0.08)" stroke-width="1" stroke-dasharray="4 4"/>
+      <ellipse cx="210" cy="210" rx="95" ry="95" fill="none" stroke="rgba(0,207,255,0.07)" stroke-width="1" stroke-dasharray="4 4"/>
+      <ellipse cx="210" cy="210" rx="140" ry="140" fill="none" stroke="rgba(0,207,255,0.06)" stroke-width="1" stroke-dasharray="4 4"/>
+      <ellipse cx="210" cy="210" rx="185" ry="185" fill="none" stroke="rgba(0,207,255,0.05)" stroke-width="1" stroke-dasharray="4 4"/>
+
+      <!-- Sun -->
+      <circle cx="210" cy="210" r="20" fill="url(#sunGrad)" filter="url(#sunGlow)"/>
+      <circle cx="210" cy="210" r="30" fill="none" stroke="rgba(245,158,11,0.15)" stroke-width="6"/>
+
+      <!-- Planet 1 (Mercury) - animated -->
+      <g id="p1">
+        <circle r="7" fill="#4a7fa5" filter="url(#planetGlow)">
+          <animateMotion dur="4s" repeatCount="indefinite">
+            <mpath xlink:href="#orbit1"/>
+          </animateMotion>
+        </circle>
+      </g>
+      <path id="orbit1" d="M270,210 A60,60 0 1,1 269.99,210" fill="none"/>
+
+      <!-- Planet 2 (Earth) -->
+      <g id="p2">
+        <circle r="10" fill="#1e6fa8">
+          <animateMotion dur="8s" repeatCount="indefinite">
+            <mpath xlink:href="#orbit2"/>
+          </animateMotion>
+        </circle>
+      </g>
+      <path id="orbit2" d="M305,210 A95,95 0 1,1 304.99,210" fill="none"/>
+
+      <!-- Planet 3 (Mars) -->
+      <g id="p3">
+        <circle r="8" fill="#c05a2e">
+          <animateMotion dur="14s" repeatCount="indefinite">
+            <mpath xlink:href="#orbit3"/>
+          </animateMotion>
+        </circle>
+      </g>
+      <path id="orbit3" d="M350,210 A140,140 0 1,1 349.99,210" fill="none"/>
+
+      <!-- Spacecraft -->
+      <g filter="url(#planetGlow)">
+        <circle r="5" fill="#06ffa5" stroke="rgba(6,255,165,0.5)" stroke-width="2">
+          <animateMotion dur="20s" repeatCount="indefinite">
+            <mpath xlink:href="#orbit4"/>
+          </animateMotion>
+        </circle>
+      </g>
+      <path id="orbit4" d="M395,210 A185,185 0 1,1 394.99,210" fill="none"/>
+
+      <!-- Labels -->
+      <text x="210" y="185" text-anchor="middle" fill="rgba(245,158,11,0.8)" font-size="9" font-family="'Orbitron', monospace">SOL</text>
+      
+      <!-- Grid lines -->
+      <line x1="0" y1="210" x2="420" y2="210" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+      <line x1="210" y1="0" x2="210" y2="420" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+      <!-- Corner marks -->
+      <path d="M10 30 L10 10 L30 10" fill="none" stroke="rgba(0,207,255,0.3)" stroke-width="1"/>
+      <path d="M390 30 L390 10 L370 10" fill="none" stroke="rgba(0,207,255,0.3)" stroke-width="1"/>
+      <path d="M10 390 L10 410 L30 410" fill="none" stroke="rgba(0,207,255,0.3)" stroke-width="1"/>
+      <path d="M390 390 L390 410 L370 410" fill="none" stroke="rgba(0,207,255,0.3)" stroke-width="1"/>
+
+      <!-- Data readouts -->
+      <text x="16" y="26" fill="rgba(0,207,255,0.5)" font-size="7" font-family="'Orbitron',monospace">NAV-SIM</text>
+      <text x="16" y="38" fill="rgba(0,207,255,0.3)" font-size="6" font-family="'Orbitron',monospace">REAL-TIME</text>
+    </svg>
+  </div>
+</section>
+
+<!-- TECH GRID -->
+<section class="tech-section" id="tech">
+  <div class="section-eyebrow reveal">Partners &amp; Technology</div>
+  <h2 class="section-title reveal">Powered by the<br>Best in the Industry</h2>
+  <div class="tech-grid reveal">
+    <div class="tech-item"><span class="tech-icon">🚀</span><span class="tech-logo">LAUNCH SYS</span></div>
+    <div class="tech-item"><span class="tech-icon">⚛</span><span class="tech-logo">PROPULSION</span></div>
+    <div class="tech-item"><span class="tech-icon">🛰</span><span class="tech-logo">TELEMETRY</span></div>
+    <div class="tech-item"><span class="tech-icon">🔭</span><span class="tech-logo">OPTICS</span></div>
+    <div class="tech-item"><span class="tech-icon">🧬</span><span class="tech-logo">BIO MODULE</span></div>
+    <div class="tech-item"><span class="tech-icon">💡</span><span class="tech-logo">SOLAR ARRAY</span></div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="timeline-section" id="timeline">
+  <div class="section-eyebrow reveal">Milestones</div>
+  <h2 class="section-title reveal">The Road Ahead</h2>
+  <div class="timeline reveal">
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:#06ffa5;box-shadow:0 0 16px #06ffa5;"></div>
+      <p class="timeline-year">2024 — COMPLETED</p>
+      <p class="timeline-event">Quantum Navigation Framework</p>
+      <p class="timeline-detail">Deployed the first operational quantum-enhanced navigation AI across 12 active spacecraft, reducing trajectory error by 99.4%.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:#00cfff;box-shadow:0 0 16px #00cfff;animation-delay:0.3s;"></div>
+      <p class="timeline-year">2025 — IN PROGRESS</p>
+      <p class="timeline-event">Artemis VII Launch Window</p>
+      <p class="timeline-detail">Six-person crewed mission to the lunar south pole, establishing the Shackleton Outpost as humanity's first permanent lunar base.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:#a855f7;box-shadow:0 0 16px #a855f7;animation-delay:0.6s;"></div>
+      <p class="timeline-year">2027 — PLANNED</p>
+      <p class="timeline-event">Europa Ice Penetrator</p>
+      <p class="timeline-detail">Robotic lander drills through 15 km of Europan ice to deploy a submersible probe in the warm subsurface ocean beneath.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:#f59e0b;box-shadow:0 0 16px #f59e0b;animation-delay:0.9s;"></div>
+      <p class="timeline-year">2031 — PROPOSED</p>
+      <p class="timeline-event">Crewed Mars Departure</p>
+      <p class="timeline-detail">First human crew to Mars aboard the Bifrost vessel, powered by next-generation fusion torch engines achieving 45-day Earth–Mars transit.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-glow"></div>
+  <div class="section-eyebrow reveal" style="justify-content:center;">Join the Mission</div>
+  <h2 class="cta-title reveal">Ready to Push<br>the Frontier?</h2>
+  <p class="cta-sub reveal">Partner with SpaceMeld or join our growing team of engineers, scientists, and dreamers building humanity's next chapter.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;" class="reveal">
+    <button class="btn-primary">Apply Now</button>
+    <button class="btn-secondary">Partner With Us</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 SpaceMeld. All rights reserved. Reaching beyond the edge.</p>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Press</a>
+    <a href="#">Careers</a>
+  </div>
+</footer>
+
+<script>
+/* ---- CUSTOM CURSOR ---- */
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animCursor() {
+  cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+document.querySelectorAll('button, a, .mission-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.style.transform = 'translate(-50%,-50%) scale(2.5)'; ring.style.opacity = '0.5'; ring.style.transform = 'translate(-50%,-50%) scale(1.4)'; });
+  el.addEventListener('mouseleave', () => { cur.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.opacity = '1'; ring.style.transform = 'translate(-50%,-50%) scale(1)'; });
+});
+
+/* ---- STARFIELD ---- */
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let W, H, stars = [], shootingStars = [];
+
+function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+function mkStars() {
+  stars = [];
+  for (let i = 0; i < 280; i++) {
+    stars.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.6+0.2, a: Math.random(), speed: Math.random()*0.4+0.1, twinkleOff: Math.random()*Math.PI*2 });
+  }
+}
+mkStars();
+
+function addShooting() {
+  if (shootingStars.length < 3 && Math.random() < 0.015) {
+    const y = Math.random() * H * 0.6;
+    shootingStars.push({ x: Math.random()*W*0.5 + W*0.3, y, vx: -(Math.random()*6+4), vy: Math.random()*2+1, life: 1, tail: [] });
+  }
+}
+
+function drawFrame(t) {
+  ctx.clearRect(0,0,W,H);
+  stars.forEach(s => {
+    const tw = 0.5 + 0.5 * Math.sin(t * 0.001 * s.speed + s.twinkleOff);
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(255,255,255,${s.a * tw})`;
+    ctx.fill();
+  });
+  addShooting();
+  shootingStars = shootingStars.filter(s => s.life > 0);
+  shootingStars.forEach(s => {
+    s.tail.push({x: s.x, y: s.y});
+    if (s.tail.length > 24) s.tail.shift();
+    s.x += s.vx; s.y += s.vy; s.life -= 0.018;
+    s.tail.forEach((p,i) => {
+      const a = (i/s.tail.length) * s.life * 0.8;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 1.2, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(0,207,255,${a})`; ctx.fill();
+    });
+    ctx.beginPath(); ctx.arc(s.x, s.y, 2, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(0,207,255,${s.life})`; ctx.fill();
+  });
+  requestAnimationFrame(drawFrame);
+}
+requestAnimationFrame(drawFrame);
+
+/* ---- SCROLL REVEALS ---- */
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('in-view'), i * 80);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => obs.observe(el));
+
+/* ---- ANIMATED COUNTERS ---- */
+const targets = [142, 3200, 48, 67];
+const suffix = ['', 'K+', 'M+', ''];
+const prefix = ['', '', '', ''];
+const els = ['s1','s2','s3','s4'].map(id => document.getElementById(id));
+
+function countUp(el, target, suf, dur=2000) {
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / dur, 1);
+    const ease = 1 - Math.pow(1 - p, 4);
+    el.textContent = Math.floor(ease * target) + suf;
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+const statsObs = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    els.forEach((el, i) => countUp(el, targets[i], suffix[i]));
+    statsObs.disconnect();
+  }
+}, { threshold: 0.5 });
+statsObs.observe(document.querySelector('.stats-bar'));
+</script>
+</body>
+</html>

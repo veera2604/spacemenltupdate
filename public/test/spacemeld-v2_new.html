@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpaceMELD Architects — Thoughtful. Timeless.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --ink: #0B0A08;
+      --cream: #F2EDE4;
+      --stone: #B8A898;
+      --gold: #C4965A;
+      --gold2: #E8C48A;
+      --mid: #2A2820;
+      --muted: #6B6358;
+      --white: #FAFAF6;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ─── CURSOR ─── */
+    #cur,
+    #cur2 {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+
+    #cur {
+      width: 7px;
+      height: 7px;
+      background: var(--gold);
+      border-radius: 50%;
+      transition: width .25s, height .25s, background .25s;
+    }
+
+    #cur2 {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(196, 150, 90, .45);
+      border-radius: 50%;
+      transition: width .3s, height .3s, opacity .3s;
+    }
+
+    body.hov #cur {
+      width: 54px;
+      height: 54px;
+      background: rgba(196, 150, 90, .12);
+    }
+
+    body.hov #cur2 {
+      opacity: 0;
+    }
+
+    /* ─── LOADER ─── */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: var(--ink);
+      z-index: 8000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      transition: opacity .9s ease, visibility .9s;
+    }
+
+    #loader.out {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .ld-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(44px, 8vw, 96px);
+      font-weight: 300;
+      letter-spacing: .18em;
+      overflow: hidden;
+    }
+
+    .ld-logo span {
+      display: inline-block;
+      transform: translateY(110%);
+      animation: sup .9s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    .ld-logo span:nth-child(1) {
+      animation-delay: .00s
+    }
+
+    .ld-logo span:nth-child(2) {
+      animation-delay: .05s
+    }
+
+    .ld-logo span:nth-child(3) {
+      animation-delay: .10s
+    }
+
+    .ld-logo span:nth-child(4) {
+      animation-delay: .15s
+    }
+
+    .ld-logo span:nth-child(5) {
+      animation-delay: .20s
+    }
+
+    .ld-logo span:nth-child(6) {
+      animation-delay: .25s
+    }
+
+    .ld-logo span:nth-child(7) {
+      animation-delay: .30s
+    }
+
+    .ld-logo span:nth-child(8) {
+      animation-delay: .35s
+    }
+
+    .ld-logo span:nth-child(9) {
+      animation-delay: .40s
+    }
+
+    .ld-bar {
+      height: 1px;
+      background: var(--gold);
+      width: 0;
+      animation: bar 1.6s cubic-bezier(.16, 1, .3, 1) .5s forwards;
+    }
+
+    .ld-sub {
+      font-size: 10px;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--stone);
+      opacity: 0;
+      animation: fd .6s ease 1.2s forwards;
+    }
+
+    @keyframes sup {
+      to {
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes bar {
+      to {
+        width: 220px
+      }
+    }
+
+    @keyframes fd {
+      to {
+        opacity: 1
+      }
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 600;
+      padding: 26px 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all .4s ease;
+      opacity: 0;
+      animation: fd 1s ease 2.2s forwards;
+    }
+
+    nav.scrolled {
+      background: rgba(11, 10, 8, .92);
+      backdrop-filter: blur(24px);
+      padding: 16px 52px;
+      border-bottom: 1px solid rgba(196, 150, 90, .08);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+      font-weight: 400;
+    }
+
+    .nav-logo em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 10.5px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--stone);
+      text-decoration: none;
+      transition: color .3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width .35s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .nav-links a:hover {
+      color: var(--cream);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: var(--gold);
+      padding: 11px 26px;
+      text-decoration: none;
+      transition: all .3s;
+      font-weight: 500;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold2);
+    }
+
+    /* ─── HERO SLIDER ─── */
+    .hero {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slides {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      transition: none;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.2s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .slide.active {
+      opacity: 1;
+    }
+
+    .slide.prev {
+      opacity: 0;
+    }
+
+    .slide-bg {
+      position: absolute;
+      inset: -8%;
+      background-size: cover;
+      background-position: center;
+      transition: transform 8s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .slide.active .slide-bg {
+      transform: scale(1.06);
+    }
+
+    .slide-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(130deg, rgba(11, 10, 8, .72) 0%, rgba(11, 10, 8, .28) 60%, rgba(11, 10, 8, .55) 100%);
+    }
+
+    /* slide images */
+    .s0 {
+      background-image: url('Mr.Arun%20Kumar/Render_01.png');
+    }
+
+    .s1 {
+      background-image: url('Mangalam%20Towers/A.jpg.jpeg');
+    }
+
+    .s2 {
+      background-image: url('APR/A_F.jpg%20%281%29.jpeg');
+    }
+
+    .s3 {
+      background-image: url('Mr.Rajesh/R_01.png');
+    }
+
+    .s4 {
+      background-image: url('APR/C1.jpg.jpeg');
+    }
+
+    .s5 {
+      background-image: url('Suriya/Render_03.png');
+    }
+
+    .hero-ui {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 52px 64px;
+    }
+
+    .hero-top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 140px 52px 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      opacity: 0;
+      animation: fd 1s ease 2.4s forwards;
+    }
+
+    .hero-label {
+      font-size: 9px;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .hero-label::before {
+      content: '';
+      width: 36px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .slide-counter {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .1em;
+      color: var(--stone);
+    }
+
+    .slide-counter span {
+      color: var(--cream);
+    }
+
+    .hero-title-wrap {
+      overflow: hidden;
+      margin-bottom: 36px;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 8.5vw, 132px);
+      font-weight: 300;
+      line-height: .92;
+      letter-spacing: -.02em;
+      transform: translateY(100%);
+      animation: sup 1.1s cubic-bezier(.16, 1, .3, 1) 2.5s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--stone);
+    }
+
+    .hero-name-wrap {
+      overflow: hidden;
+    }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 4vw, 62px);
+      font-weight: 300;
+      letter-spacing: .06em;
+      color: var(--gold);
+      transform: translateY(100%);
+      animation: sup 1.1s cubic-bezier(.16, 1, .3, 1) 2.7s forwards;
+    }
+
+    .hero-bottom {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      opacity: 0;
+      animation: fd 1s ease 3s forwards;
+    }
+
+    .hero-desc {
+      font-size: 13.5px;
+      line-height: 1.85;
+      color: var(--stone);
+      max-width: 340px;
+    }
+
+    .hero-nav {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .hn-btn {
+      width: 52px;
+      height: 52px;
+      border: 1px solid rgba(196, 150, 90, .3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: none;
+      transition: all .3s;
+      background: transparent;
+    }
+
+    .hn-btn:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .hn-btn svg {
+      stroke: var(--cream);
+      transition: stroke .3s;
+    }
+
+    .hn-btn:hover svg {
+      stroke: var(--ink);
+    }
+
+    .hero-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: var(--gold);
+      transition: width .1s linear;
+      z-index: 20;
+    }
+
+    .slide-dots {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-right: 20px;
+    }
+
+    .sdot {
+      width: 20px;
+      height: 1px;
+      background: rgba(196, 150, 90, .3);
+      cursor: none;
+      transition: all .4s;
+    }
+
+    .sdot.on {
+      width: 36px;
+      background: var(--gold);
+    }
+
+    /* slide project name overlay */
+    .slide-pname {
+      position: absolute;
+      bottom: 72px;
+      left: 52px;
+      z-index: 12;
+      pointer-events: none;
+    }
+
+    .pname-tag {
+      font-size: 9px;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all .6s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .pname-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 4vw, 56px);
+      font-weight: 300;
+      color: var(--white);
+      opacity: 0;
+      transform: translateX(-24px);
+      transition: all .7s .1s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .slide.active .pname-tag,
+    .slide.active .pname-title {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .open-project {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 10px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--cream);
+      border: 1px solid rgba(245, 242, 237, .22);
+      padding: 12px 24px;
+      margin-top: 18px;
+      cursor: none;
+      transition: all .35s;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity .7s .2s, transform .7s .2s cubic-bezier(.16, 1, .3, 1), background .3s, color .3s;
+    }
+
+    .slide.active .open-project {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .open-project:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--ink);
+    }
+
+    /* ─── MARQUEE ─── */
+    .mq {
+      overflow: hidden;
+      background: var(--gold);
+      padding: 14px 0;
+    }
+
+    .mq-track {
+      display: flex;
+      gap: 52px;
+      animation: mq 18s linear infinite;
+      white-space: nowrap;
+    }
+
+    .mq-item {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 15px;
+      letter-spacing: .12em;
+      color: var(--ink);
+      flex-shrink: 0;
+    }
+
+    .mq-sep {
+      color: rgba(11, 10, 8, .35);
+      flex-shrink: 0;
+    }
+
+    @keyframes mq {
+      to {
+        transform: translateX(-50%)
+      }
+    }
+
+    /* ─── SECTIONS BASE ─── */
+    .reveal,
+    .reveal-l,
+    .reveal-r {
+      opacity: 0;
+      transition: opacity .9s cubic-bezier(.16, 1, .3, 1), transform .9s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .reveal {
+      transform: translateY(44px);
+    }
+
+    .reveal-l {
+      transform: translateX(-44px);
+    }
+
+    .reveal-r {
+      transform: translateX(44px);
+    }
+
+    .reveal.vis,
+    .reveal-l.vis,
+    .reveal-r.vis {
+      opacity: 1;
+      transform: none;
+    }
+
+    .d1 {
+      transition-delay: .1s
+    }
+
+    .d2 {
+      transition-delay: .2s
+    }
+
+    .d3 {
+      transition-delay: .3s
+    }
+
+    .d4 {
+      transition-delay: .4s
+    }
+
+    .d5 {
+      transition-delay: .5s
+    }
+
+    .sec-label {
+      font-size: 9px;
+      letter-spacing: .42em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 44px;
+    }
+
+    .sec-label::after {
+      content: '';
+      width: 50px;
+      height: 1px;
+      background: rgba(196, 150, 90, .25);
+    }
+
+    /* ─── ABOUT ─── */
+    .about {
+      padding: 130px 52px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 90px;
+      align-items: center;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .ah {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(38px, 4.5vw, 68px);
+      font-weight: 300;
+      line-height: 1.08;
+      color: var(--cream);
+      margin-bottom: 28px;
+    }
+
+    .ah em {
+      font-style: italic;
+      color: var(--stone);
+    }
+
+    .ab {
+      font-size: 14.5px;
+      line-height: 1.9;
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+
+    .a-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 10.5px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(242, 237, 228, .2);
+      transition: all .4s;
+    }
+
+    .a-btn:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+      gap: 22px;
+    }
+
+    .a-img-wrap {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+    }
+
+    .a-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .8s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .a-img-wrap:hover img {
+      transform: scale(1.05);
+    }
+
+    .a-badge {
+      position: absolute;
+      bottom: -22px;
+      left: -36px;
+      background: var(--gold);
+      padding: 26px 30px;
+      color: var(--ink);
+    }
+
+    .a-badge-n {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 54px;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    .a-badge-l {
+      font-size: 9px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ─── PROJECTS GRID ─── */
+    .projects-section {
+      padding: 120px 52px;
+      background: var(--mid);
+    }
+
+    .projects-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .proj-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 60px;
+    }
+
+    .proj-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(34px, 4.5vw, 64px);
+      font-weight: 300;
+      color: var(--cream);
+    }
+
+    .proj-heading em {
+      font-style: italic;
+      color: var(--stone);
+    }
+
+    .proj-all {
+      font-size: 10px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .3s;
+    }
+
+    .proj-all:hover {
+      color: var(--gold);
+    }
+
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+    }
+
+    .proj-card {
+      position: relative;
+      overflow: hidden;
+      cursor: none;
+      aspect-ratio: 4/5;
+    }
+
+    .proj-card:first-child {
+      grid-column: span 2;
+      aspect-ratio: 16/9;
+    }
+
+    .proj-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .8s cubic-bezier(.16, 1, .3, 1), filter .5s;
+    }
+
+    .proj-card:hover img {
+      transform: scale(1.07);
+      filter: brightness(.45);
+    }
+
+    .proj-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(11, 10, 8, .88) 0%, transparent 55%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 32px;
+    }
+
+    .proj-idx {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--gold);
+      opacity: .7;
+      margin-bottom: 10px;
+    }
+
+    .proj-cat {
+      font-size: 9px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--stone);
+      margin-bottom: 8px;
+    }
+
+    .proj-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .proj-arrow {
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(196, 150, 90, .3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 16px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .4s, transform .4s, background .3s;
+    }
+
+    .proj-card:hover .proj-arrow {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .proj-card:hover .proj-arrow:hover {
+      background: var(--gold);
+    }
+
+    /* ─── PROJECT MODAL ─── */
+    #modal {
+      position: fixed;
+      inset: 0;
+      z-index: 7000;
+      display: flex;
+      align-items: stretch;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .5s ease;
+    }
+
+    #modal.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(11, 10, 8, .75);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-panel {
+      position: relative;
+      z-index: 1;
+      width: min(92vw, 1100px);
+      margin: auto;
+      background: var(--ink);
+      border: 1px solid rgba(196, 150, 90, .12);
+      overflow-y: auto;
+      max-height: 92vh;
+      transform: translateY(50px) scale(.97);
+      transition: transform .55s cubic-bezier(.16, 1, .3, 1), opacity .5s ease;
+      opacity: 0;
+    }
+
+    #modal.open .modal-panel {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .modal-hero {
+      position: relative;
+      height: 55vh;
+      overflow: hidden;
+    }
+
+    .modal-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .modal-hero-grad {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(11, 10, 8, 1) 0%, transparent 60%);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(245, 242, 237, .2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: none;
+      transition: all .3s;
+      z-index: 5;
+    }
+
+    .modal-close:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .modal-close svg {
+      stroke: var(--cream);
+      transition: stroke .3s;
+    }
+
+    .modal-close:hover svg {
+      stroke: var(--ink);
+    }
+
+    .modal-body {
+      padding: 48px 56px 64px;
+    }
+
+    .modal-meta {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .m-tag {
+      font-size: 9px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      padding: 7px 14px;
+      border: 1px solid rgba(196, 150, 90, .25);
+      color: var(--gold);
+    }
+
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 72px);
+      font-weight: 300;
+      line-height: 1;
+      color: var(--cream);
+      margin-bottom: 32px;
+    }
+
+    .modal-desc {
+      font-size: 14.5px;
+      line-height: 1.9;
+      color: var(--muted);
+      margin-bottom: 48px;
+      max-width: 680px;
+    }
+
+    .modal-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      border: 1px solid rgba(245, 242, 237, .06);
+      margin-bottom: 48px;
+    }
+
+    .ms-item {
+      padding: 28px 24px;
+      border-right: 1px solid rgba(245, 242, 237, .06);
+    }
+
+    .ms-item:last-child {
+      border-right: none;
+    }
+
+    .ms-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 40px;
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1;
+    }
+
+    .ms-unit {
+      color: var(--gold);
+      font-size: 24px;
+    }
+
+    .ms-label {
+      font-size: 9.5px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .modal-gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+    }
+
+    .modal-gallery img {
+      width: 100%;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .modal-gallery img:hover {
+      transform: scale(1.02);
+    }
+
+    .modal-cta {
+      margin-top: 48px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .mcta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 10.5px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: var(--gold);
+      padding: 18px 36px;
+      cursor: none;
+      text-decoration: none;
+      transition: background .3s;
+    }
+
+    .mcta-btn:hover {
+      background: var(--gold2);
+    }
+
+    .mcta-txt {
+      font-size: 11px;
+      letter-spacing: .2em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* ─── PROCESS ─── */
+    .process {
+      padding: 130px 52px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .proc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      margin-top: 12px;
+    }
+
+    .proc-step {
+      padding: 44px 36px;
+      background: rgba(255, 255, 255, .02);
+      border: 1px solid rgba(196, 150, 90, .07);
+      transition: all .4s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .proc-step::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+      z-index: 0;
+    }
+
+    .proc-step:hover::before {
+      transform: scaleY(1);
+    }
+
+    .proc-step * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .proc-step:hover .ps-num {
+      color: rgba(11, 10, 8, .18);
+    }
+
+    .proc-step:hover .ps-title,
+    .proc-step:hover .ps-desc {
+      color: var(--ink);
+    }
+
+    .ps-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 68px;
+      font-weight: 300;
+      color: rgba(196, 150, 90, .13);
+      line-height: 1;
+      margin-bottom: 22px;
+      transition: color .3s;
+    }
+
+    .ps-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      color: var(--cream);
+      margin-bottom: 14px;
+      transition: color .3s;
+    }
+
+    .ps-desc {
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--muted);
+      transition: color .3s;
+    }
+
+    /* ─── STATS ─── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      max-width: 1440px;
+      margin: 0 auto 0;
+      border-top: 1px solid rgba(245, 242, 237, .07);
+    }
+
+    .stat-box {
+      padding: 60px 52px;
+      border-right: 1px solid rgba(245, 242, 237, .07);
+    }
+
+    .stat-box:last-child {
+      border-right: none;
+    }
+
+    .stat-n {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 76px;
+      font-weight: 300;
+      line-height: 1;
+      color: var(--cream);
+    }
+
+    .stat-u {
+      color: var(--gold);
+      font-size: 42px;
+    }
+
+    .stat-l {
+      font-size: 9.5px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    /* ─── QUOTE BAND ─── */
+    .qband {
+      padding: 120px 52px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196, 150, 90, .07) 0%, transparent 70%), var(--ink);
+    }
+
+    .qband::before {
+      content: '❝';
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 320px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -52%);
+      color: rgba(196, 150, 90, .04);
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    .qt {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(24px, 3.5vw, 48px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--cream);
+      line-height: 1.45;
+      max-width: 860px;
+      margin: 0 auto 32px;
+    }
+
+    .qa {
+      font-size: 10px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .qr {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      letter-spacing: .12em;
+    }
+
+    .qt-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 40px;
+    }
+
+    .qtd {
+      width: 22px;
+      height: 2px;
+      background: rgba(196, 150, 90, .2);
+      cursor: none;
+      transition: all .4s;
+    }
+
+    .qtd.on {
+      width: 40px;
+      background: var(--gold);
+    }
+
+    /* ─── CONTACT ─── */
+    .contact {
+      padding: 140px 52px;
+      background: var(--mid);
+    }
+
+    .contact-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+    }
+
+    .c-tag {
+      font-size: 9px;
+      letter-spacing: .42em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+    }
+
+    .c-head {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(40px, 5vw, 80px);
+      font-weight: 300;
+      line-height: .98;
+      color: var(--cream);
+      margin-bottom: 24px;
+    }
+
+    .c-head em {
+      font-style: italic;
+      color: var(--stone);
+    }
+
+    .c-sub {
+      font-size: 14px;
+      line-height: 1.85;
+      color: var(--muted);
+      margin-bottom: 48px;
+      max-width: 380px;
+    }
+
+    .c-links {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .c-link {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+      color: var(--stone);
+      text-decoration: none;
+      transition: color .3s;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(245, 242, 237, .06);
+    }
+
+    .c-link:hover {
+      color: var(--cream);
+    }
+
+    .c-link-label {
+      font-size: 9px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      width: 80px;
+      flex-shrink: 0;
+    }
+
+    .c-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .cf-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .cf-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cf-label {
+      font-size: 9px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .cf-input,
+    .cf-ta {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(196, 150, 90, .15);
+      color: var(--cream);
+      padding: 16px 18px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border .3s;
+      resize: none;
+    }
+
+    .cf-input::placeholder,
+    .cf-ta::placeholder {
+      color: var(--muted);
+    }
+
+    .cf-input:focus,
+    .cf-ta:focus {
+      border-color: var(--gold);
+    }
+
+    .cf-ta {
+      height: 130px;
+    }
+
+    .cf-btn {
+      align-self: flex-start;
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 10px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      border: none;
+      padding: 18px 40px;
+      cursor: none;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      transition: background .3s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cf-btn:hover {
+      background: var(--gold2);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--ink);
+      border-top: 1px solid rgba(245, 242, 237, .06);
+      padding: 64px 52px 36px;
+    }
+
+    .ft-top {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 56px;
+      margin-bottom: 64px;
+    }
+
+    .ft-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      letter-spacing: .18em;
+      color: var(--cream);
+      margin-bottom: 16px;
+    }
+
+    .ft-brand em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .ft-about {
+      font-size: 13px;
+      line-height: 1.85;
+      color: var(--muted);
+      margin-bottom: 28px;
+      max-width: 260px;
+    }
+
+    .ft-social {
+      display: flex;
+      gap: 12px;
+    }
+
+    .ft-soc {
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(196, 150, 90, .22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      letter-spacing: .06em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: all .3s;
+    }
+
+    .ft-soc:hover {
+      background: var(--gold);
+      color: var(--ink);
+      border-color: var(--gold);
+    }
+
+    .ft-col h5 {
+      font-size: 9px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 22px;
+    }
+
+    .ft-col ul {
+      list-style: none;
+    }
+
+    .ft-col li {
+      margin-bottom: 12px;
+    }
+
+    .ft-col a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .3s, transform .3s;
+      display: inline-block;
+    }
+
+    .ft-col a:hover {
+      color: var(--cream);
+      transform: translateX(4px);
+    }
+
+    .ft-bot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 28px;
+      border-top: 1px solid rgba(245, 242, 237, .05);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: .08em;
+    }
+
+    @media(max-width:900px) {
+      nav {
+        padding: 18px 24px;
+      }
+
+      .nav-links,
+      .nav-cta {
+        display: none;
+      }
+
+      .hero-ui {
+        padding: 0 24px 52px;
+      }
+
+      .hero-top-bar,
+      .slide-pname {
+        left: 24px;
+      }
+
+      .about {
+        grid-template-columns: 1fr;
+        padding: 80px 24px;
+      }
+
+      .a-badge {
+        left: 0;
+      }
+
+      .projects-section {
+        padding: 80px 24px;
+      }
+
+      .proj-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .proj-card:first-child {
+        grid-column: span 1;
+      }
+
+      .process {
+        padding: 80px 24px;
+      }
+
+      .proc-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stat-box {
+        border-right: none;
+        border-bottom: 1px solid rgba(245, 242, 237, .07);
+      }
+
+      .qband {
+        padding: 80px 24px;
+      }
+
+      .contact {
+        padding: 80px 24px;
+      }
+
+      .contact-inner {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+
+      footer {
+        padding: 52px 24px 28px;
+      }
+
+      .ft-top {
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+      }
+
+      .modal-body {
+        padding: 28px 28px 44px;
+      }
+
+      .modal-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-gallery {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="cur"></div>
+  <div id="cur2"></div>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="ld-logo">
+      <span>S</span><span>P</span><span>A</span><span>C</span><span>E</span><span>M</span><span>E</span><span>L</span><span>D</span>
+    </div>
+    <div class="ld-bar"></div>
+    <div class="ld-sub">Architecture · Interior · Construction</div>
+  </div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">Space<em>MELD</em></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Works</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Get a Quote</a>
+  </nav>
+
+  <!-- ═══ HERO SLIDER ═══ -->
+  <section class="hero" id="home">
+    <div class="slides" id="slides">
+
+      <div class="slide active" data-idx="0">
+        <div class="slide-bg s0"></div>
+        <div class="slide-pname">
+          <div class="pname-tag">Residential · Sun Brooks Layout, Bengaluru</div>
+          <div class="pname-title">Green Frame Villa</div>
+          <button class="open-project" onclick="openModal(0)">
+            View Project
+            <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="0" y1="5" x2="14" y2="5" />
+              <polyline points="10,1 14,5 10,9" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="slide" data-idx="1">
+        <div class="slide-bg s1"></div>
+        <div class="slide-pname">
+          <div class="pname-tag">Residential · Bengaluru</div>
+          <div class="pname-title">Venky Residence</div>
+          <button class="open-project" onclick="openModal(3)">
+            View Project
+            <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="0" y1="5" x2="14" y2="5" />
+              <polyline points="10,1 14,5 10,9" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="slide" data-idx="2">
+        <div class="slide-bg s2"></div>
+        <div class="slide-pname">
+          <div class="pname-tag">Commercial · Mixed-Use</div>
+          <div class="pname-title">Mangalam Towers</div>
+          <button class="open-project" onclick="openModal(5)">
+            View Project
+            <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="0" y1="5" x2="14" y2="5" />
+              <polyline points="10,1 14,5 10,9" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="slide" data-idx="3">
+        <div class="slide-bg s3"></div>
+        <div class="slide-pname">
+          <div class="pname-tag">Residential · Mandya, Karnataka</div>
+          <div class="pname-title">Arun Kumar Residence</div>
+          <button class="open-project" onclick="openModal(1)">
+            View Project
+            <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="0" y1="5" x2="14" y2="5" />
+              <polyline points="10,1 14,5 10,9" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="slide" data-idx="4">
+        <div class="slide-bg s4"></div>
+        <div class="slide-pname">
+          <div class="pname-tag">Residential · Bengaluru</div>
+          <div class="pname-title">Suriya Residence</div>
+          <button class="open-project" onclick="openModal(4)">
+            View Project
+            <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="0" y1="5" x2="14" y2="5" />
+              <polyline points="10,1 14,5 10,9" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="slide" data-idx="5">
+        <div class="slide-bg s5"></div>
+        <div class="slide-pname">
+          <div class="pname-tag">Residential · Huskur, Bengaluru</div>
+          <div class="pname-title">Rakesh Kumar Residence</div>
+          <button class="open-project" onclick="openModal(2)">
+            View Project
+            <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="0" y1="5" x2="14" y2="5" />
+              <polyline points="10,1 14,5 10,9" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- progress bar -->
+    <div class="hero-progress" id="heroProgress"></div>
+
+    <div class="hero-top-bar">
+      <div class="hero-label">Architecture · Interior · Construction</div>
+      <div class="slide-counter"><span id="curSlide">01</span> / 06</div>
+    </div>
+
+    <div class="hero-ui">
+      <div style="margin-bottom:auto;padding-top:160px;">
+        <div class="hero-title-wrap">
+          <h1 class="hero-title">Thoughtful.<br><em>Timeless.</em></h1>
+        </div>
+        <div class="hero-name-wrap">
+          <div class="hero-name">SpaceMELD Architects</div>
+        </div>
+      </div>
+      <div class="hero-bottom">
+        <p class="hero-desc">We design homes and spaces that transcend time — where bold aesthetics meet deep
+          functionality.</p>
+        <div class="hero-nav">
+          <div class="slide-dots" id="slideDots">
+            <div class="sdot on" onclick="goSlide(0)"></div>
+            <div class="sdot" onclick="goSlide(1)"></div>
+            <div class="sdot" onclick="goSlide(2)"></div>
+            <div class="sdot" onclick="goSlide(3)"></div>
+            <div class="sdot" onclick="goSlide(4)"></div>
+            <div class="sdot" onclick="goSlide(5)"></div>
+          </div>
+          <button class="hn-btn" onclick="prevSlide()">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke-width="1.5">
+              <line x1="18" y1="6" x2="2" y2="6" />
+              <polyline points="6,2 2,6 6,10" />
+            </svg>
+          </button>
+          <button class="hn-btn" onclick="nextSlide()">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke-width="1.5">
+              <line x1="0" y1="6" x2="16" y2="6" />
+              <polyline points="12,2 16,6 12,10" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="mq">
+    <div class="mq-track">
+      <span class="mq-item">Architecture</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Interior Design</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Turnkey Construction</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Bangalore · India</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Since 2016</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Architecture</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Interior Design</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Turnkey Construction</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Bangalore · India</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Since 2016</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Architecture</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Interior Design</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Turnkey Construction</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Bangalore · India</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Since 2016</span><span class="mq-sep">◆</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about">
+      <div class="reveal-l">
+        <div class="sec-label">Our Story</div>
+        <h2 class="ah">Designing spaces that<br><em>inspire living</em></h2>
+        <p class="ab">SpaceMELD is a Bangalore-based design studio dedicated to creating homes and environments that
+          feel deeply personal. Our work begins with listening — understanding how you inhabit space, what you dream of,
+          and how we can make every room an extension of your identity.</p>
+        <p class="ab">From concept to construction, our integrated approach ensures seamless delivery. We craft spaces
+          rooted in material honesty, spatial clarity, and enduring beauty.</p>
+        <a href="#projects" class="a-btn">
+          Explore Our Work
+          <svg width="20" height="12" viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="1.5">
+            <line x1="0" y1="6" x2="18" y2="6" />
+            <polyline points="14,2 18,6 14,10" />
+          </svg>
+        </a>
+      </div>
+      <div class="reveal-r" style="position:relative;padding-bottom:30px;">
+        <div class="a-img-wrap">
+          <img src="Suganthi/A_2%20-%20Photo.jpg%20%281%29.jpeg" alt="About SpaceMELD">
+        </div>
+        <div class="a-badge">
+          <div class="a-badge-n">120<span style="font-size:26px;color:rgba(11,10,8,.5)">+</span></div>
+          <div class="a-badge-l">Projects Completed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-box reveal d1">
+      <div class="stat-n">120<span class="stat-u">+</span></div>
+      <div class="stat-l">Projects Completed</div>
+    </div>
+    <div class="stat-box reveal d2">
+      <div class="stat-n">8<span class="stat-u">yr</span></div>
+      <div class="stat-l">Years of Experience</div>
+    </div>
+    <div class="stat-box reveal d3">
+      <div class="stat-n">15<span class="stat-u">+</span></div>
+      <div class="stat-l">Design Experts</div>
+    </div>
+    <div class="stat-box reveal d4">
+      <div class="stat-n">98<span class="stat-u">%</span></div>
+      <div class="stat-l">Client Satisfaction</div>
+    </div>
+  </div>
+
+  <!-- PROJECTS GRID -->
+  <section class="projects-section" id="projects">
+    <div class="projects-inner">
+      <div class="proj-head reveal">
+        <div>
+          <div class="sec-label">Portfolio</div>
+          <h2 class="proj-heading">Selected <em>Works</em></h2>
+        </div>
+        <a href="#" class="proj-all">View All Projects →</a>
+      </div>
+      <div class="proj-grid" id="projGrid"></div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="process" id="process">
+    <div class="reveal" style="text-align:center;margin-bottom:12px;">
+      <div class="sec-label" style="justify-content:center">How We Work</div>
+      <h2
+        style="font-family:'Cormorant Garamond',serif;font-size:clamp(34px,4.5vw,62px);font-weight:300;color:var(--cream);">
+        Our <em style="font-style:italic;color:var(--stone)">Process</em></h2>
+    </div>
+    <div class="proc-grid" style="margin-top:48px;">
+      <div class="proc-step reveal d1">
+        <div class="ps-num">01</div>
+        <h3 class="ps-title">Discovery</h3>
+        <p class="ps-desc">We begin with deep listening — understanding your lifestyle, aspirations, site constraints,
+          and budget to define a clear, ambitious brief.</p>
+      </div>
+      <div class="proc-step reveal d2">
+        <div class="ps-num">02</div>
+        <h3 class="ps-title">Concept</h3>
+        <p class="ps-desc">Bold ideas are explored, tested, and refined until we arrive at a design direction that feels
+          both inevitable and inspired.</p>
+      </div>
+      <div class="proc-step reveal d3">
+        <div class="ps-num">03</div>
+        <h3 class="ps-title">Design</h3>
+        <p class="ps-desc">Detailed architectural drawings, interior specifications, and material selections are
+          developed with meticulous precision.</p>
+      </div>
+      <div class="proc-step reveal d4">
+        <div class="ps-num">04</div>
+        <h3 class="ps-title">Build</h3>
+        <p class="ps-desc">We oversee every phase of construction with rigorous quality control, ensuring each element
+          is executed flawlessly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE BAND -->
+  <div class="qband">
+    <p class="qt reveal" id="qt">"SpaceMELD transformed our house into a home that feels deeply personal — every corner
+      reflects exactly how we live."</p>
+    <div class="qa reveal d1" id="qa">Priya & Arjun Menon</div>
+    <div class="qr reveal d2" id="qr">Koramangala Residence, Bangalore</div>
+    <div class="qt-dots">
+      <div class="qtd on" onclick="switchQ(0)"></div>
+      <div class="qtd" onclick="switchQ(1)"></div>
+      <div class="qtd" onclick="switchQ(2)"></div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="contact-inner">
+      <div class="reveal-l">
+        <div class="c-tag">Let's Create Together</div>
+        <h2 class="c-head">Start a<br><em>conversation</em></h2>
+        <p class="c-sub">Ready to build something extraordinary? We'd love to hear about your project and explore how we
+          can bring your vision to life.</p>
+        <div class="c-links">
+          <a href="tel:+919876543210" class="c-link">
+            <span class="c-link-label">Phone</span>
+            +91 98765 43210
+          </a>
+          <a href="mailto:hello@spacemeldarchitects.com" class="c-link">
+            <span class="c-link-label">Email</span>
+            hello@spacemeldarchitects.com
+          </a>
+          <div class="c-link">
+            <span class="c-link-label">Studio</span>
+            Koramangala, Bangalore — 560034
+          </div>
+        </div>
+      </div>
+      <div class="reveal-r">
+        <form class="c-form" onsubmit="return false;">
+          <div class="cf-row">
+            <div class="cf-field">
+              <label class="cf-label">Your Name</label>
+              <input class="cf-input" placeholder="Full name" type="text">
+            </div>
+            <div class="cf-field">
+              <label class="cf-label">Phone</label>
+              <input class="cf-input" placeholder="+91 ·····" type="tel">
+            </div>
+          </div>
+          <div class="cf-field">
+            <label class="cf-label">Email</label>
+            <input class="cf-input" placeholder="your@email.com" type="email">
+          </div>
+          <div class="cf-field">
+            <label class="cf-label">Project Type</label>
+            <input class="cf-input" placeholder="Residential / Commercial / Interior…" type="text">
+          </div>
+          <div class="cf-field">
+            <label class="cf-label">Message</label>
+            <textarea class="cf-ta" placeholder="Tell us about your dream space…"></textarea>
+          </div>
+          <button class="cf-btn" type="submit">
+            Send Message
+            <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="0" y1="5" x2="14" y2="5" />
+              <polyline points="10,1 14,5 10,9" />
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="ft-top">
+      <div>
+        <div class="ft-brand">Space<em>MELD</em></div>
+        <p class="ft-about">Creating modern homes that blend aesthetics, function, and quality — among the best
+          residential architects in Bangalore.</p>
+        <div class="ft-social">
+          <a href="https://instagram.com" class="ft-soc">Ig</a>
+          <a href="https://facebook.com" class="ft-soc">Fb</a>
+          <a href="https://linkedin.com" class="ft-soc">Li</a>
+          <a href="https://behance.net" class="ft-soc">Be</a>
+        </div>
+      </div>
+      <div class="ft-col">
+        <h5>Navigate</h5>
+        <ul>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#projects">Works</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="#">Architecture</a></li>
+          <li><a href="#">Interior Design</a></li>
+          <li><a href="#">Construction</a></li>
+          <li><a href="#">Renovation</a></li>
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="#">Bangalore, Karnataka</a></li>
+          <li><a href="mailto:hello@spacemeldarchitects.com">hello@spacemeldarchitects.com</a></li>
+          <li><a href="tel:+919876543210">+91 98765 43210</a></li>
+          <li><a href="#">View Brochure</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ft-bot">
+      <span>© 2025 SpaceMELD Architects. All rights reserved.</span>
+      <span>Architecture · Interior · Construction · Bangalore</span>
+    </div>
+  </footer>
+
+  <!-- ═══ PROJECT MODAL ═══ -->
+  <div id="modal">
+    <div class="modal-backdrop" onclick="closeModal()"></div>
+    <div class="modal-panel" id="modalPanel">
+      <div class="modal-hero">
+        <img id="mHeroImg" src="" alt="">
+        <div class="modal-hero-grad"></div>
+        <div class="modal-close" onclick="closeModal()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke-width="1.5">
+            <line x1="1" y1="1" x2="13" y2="13" />
+            <line x1="13" y1="1" x2="1" y2="13" />
+          </svg>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-meta">
+          <span class="m-tag" id="mCat">Category</span>
+          <span class="m-tag" id="mYear">Year</span>
+          <span class="m-tag" id="mLoc">Location</span>
+        </div>
+        <h2 class="modal-title" id="mTitle">Project Title</h2>
+        <p class="modal-desc" id="mDesc">Description</p>
+        <div class="modal-stats">
+          <div class="ms-item">
+            <div class="ms-num" id="ms1">—</div>
+            <div class="ms-label" id="msl1">Area</div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-num" id="ms2">—</div>
+            <div class="ms-label" id="msl2">Duration</div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-num" id="ms3">—</div>
+            <div class="ms-label" id="msl3">Scope</div>
+          </div>
+        </div>
+        <div class="modal-gallery" id="mGallery"></div>
+        <div class="modal-cta">
+          <a href="#contact" class="mcta-btn" onclick="closeModal()">
+            Start a Similar Project
+            <svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="0" y1="5" x2="14" y2="5" />
+              <polyline points="10,1 14,5 10,9" />
+            </svg>
+          </a>
+          <span class="mcta-txt">We'd love to design yours</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── CURSOR
+    const cur = document.getElementById('cur'), cur2 = document.getElementById('cur2');
+    let mx = 0, my = 0, cx = 0, cy = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx + 'px'; cur.style.top = my + 'px'; });
+    (function raf() { cx += (mx - cx) * .11; cy += (my - cy) * .11; cur2.style.left = cx + 'px'; cur2.style.top = cy + 'px'; requestAnimationFrame(raf); })();
+    document.querySelectorAll('a,button,.proj-card,.hn-btn,.sdot,.qtd,.proc-step').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hov'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hov'));
+    });
+
+    // ── LOADER
+    setTimeout(() => document.getElementById('loader').classList.add('out'), 2100);
+
+    // ── NAV SCROLL
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ── REVEAL ON SCROLL
+    const ro = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('vis');
+        } else {
+          e.target.classList.remove('vis');
+        }
+      });
+    }, { threshold: .1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => ro.observe(el));
+
+    // ── HERO SLIDER
+    let cur_s = 0, total = 6, timer = null, prog = 0, progTimer = null;
+    const DURATION = 5500;
+
+    function goSlide(idx) {
+      const slides = document.querySelectorAll('.slide');
+      const dots = document.querySelectorAll('.sdot');
+      slides[cur_s].classList.remove('active');
+      cur_s = ((idx % total) + total) % total;
+      slides[cur_s].classList.add('active');
+      dots.forEach((d, i) => d.classList.toggle('on', i === cur_s));
+      document.getElementById('curSlide').textContent = String(cur_s + 1).padStart(2, '0');
+      resetProgress();
+    }
+    function nextSlide() { goSlide(cur_s + 1); }
+    function prevSlide() { goSlide(cur_s - 1); }
+
+    function resetProgress() {
+      clearInterval(progTimer);
+      prog = 0;
+      document.getElementById('heroProgress').style.width = '0%';
+      progTimer = setInterval(() => {
+        prog += 100 / (DURATION / 50);
+        document.getElementById('heroProgress').style.width = Math.min(prog, 100) + '%';
+        if (prog >= 100) { clearInterval(progTimer); nextSlide(); }
+      }, 50);
+    }
+
+    setTimeout(resetProgress, 2300);
+
+    // ── PROJECTS DATA
+    const projects = [
+      {
+        title: 'Green Frame Villa',
+        cat: 'Residential', year: 'In Progress', loc: 'Sun Brooks Layout, Bengaluru',
+        desc: 'Building exhibits modern elegance with eco-conscious elements, using a minimalist color palette, natural textures, lush greenery, and refined geometrical forms. Elevation is well-balanced with projected volumes and recessed areas. Structure is composed of clean, sharp lines with a strong emphasis on rectangular and cubic forms. In every detail, this luxury villa has been crafted for the likeminded who seek nothing short of the extraordinary.',
+        hero: 'Mr.Arun%20Kumar/Render_01.png',
+        imgs: ['Mr.Rakesh/Enscape_2025-03-22-02-14-23.png', 'Mr.Rakesh/Enscape_2025-03-22-02-20-21.png'],
+        s1: '5,280', sl1: 'Sq. Ft. Built-Up', s2: 'In Progress', sl2: 'Status', s3: 'Architecture\n+ Interiors', sl3: 'Scope',
+      },
+      {
+        title: 'Arun Kumar Residence',
+        cat: 'Residential', year: 'Proposed', loc: 'Mandya, Karnataka',
+        desc: 'Design clearly embraces a modern minimalist language with clean lines, a rectilinear form, and a layered façade. Strong emphasis on geometry and volume creates depth and dynamic shadow play. Vertical extensions give the building a rhythm, while the materials provide elegance. The rooftop terrace introduces a volume capped with a pergola, softening the cubic form and adding interest with glass roofing at the recreational space.',
+        hero: 'Mr.Rajesh/R_01.png',
+        imgs: ['Mr.Arun%20Kumar/Coloured%20Pencil.png', 'Mr.Arun%20Kumar/Sketch%20render.png'],
+        s1: '4,330', sl1: 'Sq. Ft. Built-Up', s2: 'Proposed', sl2: 'Status', s3: 'Architecture\n+ Design', sl3: 'Scope',
+      },
+      {
+        title: 'Rakesh Kumar Residence',
+        cat: 'Residential', year: 'In Progress', loc: 'Huskur, Bengaluru',
+        desc: 'A projecting rectangular frame on the façade gives the building a strong geometric identity. It adds depth and visual interest, especially with contrasting materials inside the frame. Integrated green planters at different levels soften the hard lines and introduce natural elements, enhancing the building\'s eco-friendly appeal. Layered protruding elements like vertical fins, recessed sections, and surface textures break the monotony and provide a dynamic street view.',
+        hero: 'Suriya/Render_03.png',
+        imgs: ['Mr.Arun%20Kumar/Render_01.png', 'Mr.Rajesh/R_01.png'],
+        s1: '3,690', sl1: 'Sq. Ft. Built-Up', s2: 'In Progress', sl2: 'Status', s3: 'Architecture\n+ Interiors', sl3: 'Scope',
+      },
+      {
+        title: 'Venky Residence',
+        cat: 'Residential', year: 'Completed', loc: 'Bengaluru',
+        desc: 'Timeless Modern Elegance — Defined by Light & Geometry. A refined contemporary residence defined by bold linear geometry, warm ambient lighting, and a balanced material palette. Elevation blends textured concrete finishes, rich wood soffits, sleek vertical elements, and expansive glazing to create a timeless modern aesthetic with a strong visual presence. Thoughtfully layered volumes, subtle landscaping, and minimalist detailing enhance the overall sense of luxury and sophistication.',
+        hero: 'Mangalam%20Towers/A.jpg.jpeg',
+        imgs: ['Mangalam%20Towers/B.jpg.jpeg', 'Mangalam%20Towers/C.jpg.jpeg'],
+        s1: '—', sl1: 'Built-Up Area', s2: 'Completed', sl2: 'Status', s3: 'Full\nTurnkey', sl3: 'Scope',
+      },
+      {
+        title: 'Suriya Residence',
+        cat: 'Residential', year: 'Completed', loc: 'Bengaluru',
+        desc: 'Where contemporary elegance meets tropical serenity. A contemporary tropical residence crafted with clean architectural lines, warm natural textures, and elegant lighting accents. Elevation seamlessly blends exposed brick, textured stone, wood finishes, and lush greenery to create a sophisticated yet inviting modern facade with a strong sense of depth and character.',
+        hero: 'APR/C1.jpg.jpeg',
+        imgs: ['Suganthi/A_2%20-%20Photo.jpg%20%281%29.jpeg', 'Ravi/A3.jpg.jpeg'],
+        s1: '—', sl1: 'Built-Up Area', s2: 'Completed', sl2: 'Status', s3: 'Architecture\n+ Interiors', sl3: 'Scope',
+      },
+      {
+        title: 'Mangalam Towers',
+        cat: 'Commercial · Mixed-Use', year: 'Proposed', loc: 'India',
+        desc: 'A dynamic mixed-use commercial development that redefines the retail and office experience. The building integrates large-format digital media screens, lush rooftop greenery, warm terracotta arched entries, and vibrant brand signage within a cohesive architectural composition. Hosting anchor tenants across fashion, banking, and lifestyle, the design prioritizes street activation, visual energy, and a distinctive urban presence.',
+        hero: 'APR/A_F.jpg%20%281%29.jpeg',
+        imgs: ['Ravi/A3.jpg.jpeg', 'Ravi/A5.jpg.jpeg'],
+        s1: '—', sl1: 'Built-Up Area', s2: 'Proposed', sl2: 'Status', s3: 'Architecture\n+ Facade', sl3: 'Scope',
+      }
+    ];
+
+    // Track original indices for modal reference
+    projects.forEach((p, idx) => {
+      p.originalIndex = idx;
+    });
+
+    // Elegant helper to shuffle the project index rendering
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Dynamic rendering of projects with gorgeous stagger entry animation
+    function renderProjects() {
+      const grid = document.getElementById('projGrid');
+      if (!grid) return;
+
+      const shuffled = shuffleArray(projects);
+      grid.innerHTML = '';
+
+      shuffled.forEach((p, index) => {
+        const card = document.createElement('div');
+
+        // Stagger entrance delay for beautiful fade/slide sequence
+        card.className = 'proj-card reveal';
+        card.style.transitionDelay = `${index * 0.08}s`;
+        card.onclick = () => openModal(p.originalIndex);
+
+        card.innerHTML = `
+          <img src="${p.hero}" alt="${p.title}" loading="lazy">
+          <div class="proj-overlay">
+            <div class="proj-idx">.${String(index + 1).padStart(2, '0')}</div>
+            <div class="proj-cat">${p.cat} · ${p.year}</div>
+            <div class="proj-name">${p.title}</div>
+            <div class="proj-arrow">
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.5">
+                <line x1="0" y1="5" x2="12" y2="5" />
+                <polyline points="8,1 12,5 8,9" />
+              </svg>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+
+        // Manually observe the dynamically injected element to trigger scroll animation
+        ro.observe(card);
+      });
+    }
+
+    // Initialize rendering on load
+    window.addEventListener('DOMContentLoaded', renderProjects);
+
+    function openModal(idx) {
+      const p = projects[idx];
+      document.getElementById('mHeroImg').src = p.hero;
+      document.getElementById('mCat').textContent = p.cat;
+      document.getElementById('mYear').textContent = p.year;
+      document.getElementById('mLoc').textContent = p.loc;
+      document.getElementById('mTitle').textContent = p.title;
+      document.getElementById('mDesc').textContent = p.desc;
+      document.getElementById('ms1').textContent = p.s1;
+      document.getElementById('msl1').textContent = p.sl1;
+      document.getElementById('ms2').textContent = p.s2;
+      document.getElementById('msl2').textContent = p.sl2;
+      document.getElementById('ms3').innerHTML = p.s3.replace('\n', '<br>');
+      document.getElementById('msl3').textContent = p.sl3;
+      const gal = document.getElementById('mGallery');
+      gal.innerHTML = p.imgs.map(src => `<img src="${src}" alt="" loading="lazy">`).join('');
+      document.getElementById('modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('modalPanel').scrollTop = 0;
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── TESTIMONIALS
+    const qs = [
+      { q: '"SpaceMELD transformed our house into a home that feels deeply personal — every corner reflects exactly how we live."', a: 'Priya & Arjun Menon', r: 'Koramangala Residence, Bangalore' },
+      { q: '"The team\'s attention to detail and commitment to quality is unlike anything we experienced before. Truly exceptional work."', a: 'Vikram Nair', r: 'Villa Whitefield, Bangalore' },
+      { q: '"They listened to every wish and turned it into something even more beautiful than we imagined. Remarkable vision."', a: 'Deepa & Suresh Kumar', r: 'Jayanagar Penthouse, Bangalore' },
+    ];
+    function switchQ(i) {
+      const qt = document.getElementById('qt'), qa = document.getElementById('qa'), qr = document.getElementById('qr');
+      const dots = document.querySelectorAll('.qtd');
+      [qt, qa, qr].forEach(el => { el.style.opacity = 0; el.style.transform = 'translateY(8px)'; el.style.transition = 'opacity .35s,transform .35s'; });
+      setTimeout(() => {
+        qt.textContent = qs[i].q; qa.textContent = qs[i].a; qr.textContent = qs[i].r;
+        [qt, qa, qr].forEach(el => { el.style.opacity = 1; el.style.transform = 'translateY(0)'; });
+        dots.forEach((d, j) => d.classList.toggle('on', j === i));
+      }, 360);
+    }
+    let qi = 0; setInterval(() => { qi = (qi + 1) % 3; switchQ(qi); }, 5500);
+  </script>
+</body>
+
+</html>
