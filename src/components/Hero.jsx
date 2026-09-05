@@ -58,19 +58,12 @@ export default function Hero() {
           transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
           className="absolute inset-0 w-full h-full flex items-center justify-center bg-[#181412] overflow-hidden border-none"
         >
-          {/* Main Full-Bleed Image spanning 100% width from left to right in 100% Full View */}
-          <div className="absolute inset-0 z-10 w-full h-full overflow-hidden bg-[#181412] flex items-center justify-center">
-            {/* Ambient Blurred Background Fill */}
-            <img
-              src={slides[currentSlide].image}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-35 pointer-events-none"
-            />
-            {/* 100% Full View Main Image - No Cropping */}
+          {/* Main Full-Bleed Image spanning 100% width from left to right */}
+          <div className="absolute inset-0 z-10 w-full h-full overflow-hidden">
             <img
               src={slides[currentSlide].image}
               alt={slides[currentSlide].location}
-              className="relative z-10 max-w-full max-h-full w-full h-full object-contain object-center block transition-transform duration-1000 border-none outline-none drop-shadow-[0_8px_32px_rgba(0,0,0,0.8)]"
+              className="w-full h-full object-cover object-center transition-transform duration-1000 border-none outline-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)]"
             />
           </div>
 
