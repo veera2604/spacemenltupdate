@@ -74,7 +74,7 @@ export default function Hero() {
       </AnimatePresence>
 
       {/* Project Title & "OPEN PROJECT" Link */}
-      <div className="absolute left-4 sm:left-12 md:left-20 lg:left-32 top-1/2 -translate-y-1/2 z-20 max-w-[calc(100vw-80px)] sm:max-w-xl md:max-w-2xl text-left pointer-events-auto">
+      <div className="hero-text-container absolute left-2 sm:left-12 md:left-20 lg:left-32 top-1/2 -translate-y-1/2 z-20 max-w-[calc(100vw-80px)] sm:max-w-xl md:max-w-2xl text-left pointer-events-auto">
         <motion.div
           key={currentSlide}
           initial={{ opacity: 0, x: -30 }}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import ScrollColorImage from './ScrollColorImage';
 import {
   ArrowUpRight,
   Sparkles,
@@ -435,10 +436,10 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
                 >
                   {/* Square/Portrait Crisp Architectural Grayscale Photograph */}
                   <div className="w-full aspect-square overflow-hidden bg-gray-200 mb-6 rounded-sm shadow-sm">
-                    <img
+                    <ScrollColorImage
                       src={emp.image}
                       alt={emp.name}
-                      className={`w-full h-full object-cover ${emp.imagePosition || 'object-center'} grayscale-0 md:grayscale md:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out`}
+                      className={`w-full h-full object-cover ${emp.imagePosition || 'object-center'} group-hover:scale-105`}
                     />
                   </div>
 

@@ -158,21 +158,48 @@
     }
   }
 
-  /* Mobile Media Query Rules (max-width: 768px & hover: none) */
-  @media (max-width: 768px), (hover: none) {
-    /* Automatic full-color for mobile touch devices without needing hover */
-    .zikzak-gallery-img,
-    img.grayscale,
-    .grayscale {
-      filter: grayscale(0%) !important;
+  /* ==========================================================================
+     Scroll-Triggered Grayscale -> Full Color Effect Component CSS
+     ========================================================================== */
+  
+  /* Desktop Devices: B&W by default, Full Color on Hover */
+  @media (hover: hover) {
+    .scroll-color-img {
+      filter: grayscale(100%);
+      transition: filter 0.7s cubic-bezier(0.21, 0.47, 0.32, 0.98), transform 0.7s cubic-bezier(0.21, 0.47, 0.32, 0.98);
     }
 
-    /* Hero Slider Title mobile fluid scaling & alignment */
+    .scroll-color-img:hover,
+    .group:hover .scroll-color-img {
+      filter: grayscale(0%);
+    }
+  }
+
+  /* Mobile Touch Devices: Starts B&W, transitions to Full Color when scrolled into view */
+  @media (hover: none) {
+    .scroll-color-img {
+      filter: grayscale(100%);
+      transition: filter 0.8s cubic-bezier(0.21, 0.47, 0.32, 0.98), transform 0.8s cubic-bezier(0.21, 0.47, 0.32, 0.98);
+    }
+
+    .scroll-color-img.is-in-view {
+      filter: grayscale(0%);
+    }
+  }
+
+  /* Mobile Hero Slider Overlap & Font Alignment (Under 768px) */
+  @media (max-width: 768px) {
+    .hero-text-container {
+      padding-left: 3rem !important;
+      padding-right: 3rem !important;
+      max-width: 100vw !important;
+    }
+
     .hero-slider-title {
-      font-size: clamp(1.5rem, 6vw, 2.75rem) !important;
+      font-size: clamp(1.35rem, 5.5vw, 2.25rem) !important;
       line-height: 1.15 !important;
       word-break: break-word !important;
-      max-width: calc(100vw - 80px) !important;
+      margin-bottom: 0.75rem !important;
     }
   }
 }
