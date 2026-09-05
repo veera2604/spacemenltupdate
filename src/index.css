@@ -166,24 +166,28 @@
   @media (hover: hover) {
     .scroll-color-img {
       filter: grayscale(100%);
-      transition: filter 0.7s cubic-bezier(0.21, 0.47, 0.32, 0.98), transform 0.7s cubic-bezier(0.21, 0.47, 0.32, 0.98);
+      -webkit-filter: grayscale(100%);
+      transition: filter 0.7s cubic-bezier(0.21, 0.47, 0.32, 0.98), -webkit-filter 0.7s cubic-bezier(0.21, 0.47, 0.32, 0.98), transform 0.7s cubic-bezier(0.21, 0.47, 0.32, 0.98);
     }
 
     .scroll-color-img:hover,
     .group:hover .scroll-color-img {
-      filter: grayscale(0%);
+      filter: grayscale(0%) !important;
+      -webkit-filter: grayscale(0%) !important;
     }
   }
 
-  /* Mobile Touch Devices: Starts B&W, transitions to Full Color when scrolled into view */
-  @media (hover: none) {
+  /* Mobile Touch Devices & Screens under 1024px: Starts B&W, transitions to Full Color when inView is triggered */
+  @media (hover: none), (max-width: 1024px) {
     .scroll-color-img {
       filter: grayscale(100%);
-      transition: filter 0.8s cubic-bezier(0.21, 0.47, 0.32, 0.98), transform 0.8s cubic-bezier(0.21, 0.47, 0.32, 0.98);
+      -webkit-filter: grayscale(100%);
+      transition: filter 0.8s cubic-bezier(0.21, 0.47, 0.32, 0.98), -webkit-filter 0.8s cubic-bezier(0.21, 0.47, 0.32, 0.98), transform 0.8s cubic-bezier(0.21, 0.47, 0.32, 0.98);
     }
 
     .scroll-color-img.is-in-view {
-      filter: grayscale(0%);
+      filter: grayscale(0%) !important;
+      -webkit-filter: grayscale(0%) !important;
     }
   }
 
