@@ -5,8 +5,7 @@ import { Building2, Users, Calendar, Award, CheckCircle, Sparkles } from 'lucide
 const statsData = [
   { id: 'proj', label: 'Projects Completed', value: 50, suffix: '+', icon: Building2 },
   { id: 'clients', label: 'Happy Clients', value: 45, suffix: '+', icon: Users },
-
-  { id: 'awards', label: 'Design Awards Won', value: 15, suffix: '+', icon: Award },
+  { id: 'exp', label: 'Years of Experience', value: 8, suffix: '+', icon: Calendar },
   { id: 'rate', label: 'Client Success Rate', value: 99, suffix: '%', icon: CheckCircle },
 ];
 
@@ -54,14 +53,14 @@ export default function Statistics() {
       {/* Ambient Gold Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[250px] bg-[#c48b57]/10 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+      <div className="max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 lg:px-20 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#c48b57] font-bold mb-3"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm uppercase tracking-[0.25em] text-[#c48b57] font-bold mb-3"
           >
             <Sparkles className="w-4 h-4" />
             <span>Proven Excellence</span>
@@ -70,14 +69,14 @@ export default function Statistics() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl sm:text-5xl font-bold uppercase font-['Cormorant_Garamond'] text-[#1A1412] tracking-tight"
+            className="text-3xl sm:text-5xl lg:text-6xl font-bold uppercase font-['Cormorant_Garamond'] text-[#1A1412] tracking-tight"
           >
             BY THE <span className="text-[#c48b57] font-bold">NUMBERS</span>
           </motion.h2>
         </div>
 
         {/* High-Contrast Luxury Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10 max-w-[1700px] mx-auto">
           {statsData.map((stat, idx) => {
             const IconComponent = stat.icon;
             return (

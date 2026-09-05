@@ -61,8 +61,8 @@ export default function Navigation({ hideSpacer = false }) {
       {/* FIXED PREMIUM STICKY HEADER */}
       <header
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out flex items-center ${scrolled
-          ? 'h-[68px] md:h-[76px] bg-white/95 backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.06)] border-b border-gray-200/60'
-          : 'h-[80px] md:h-[92px] bg-white border-b border-transparent'
+          ? 'h-[52px] sm:h-[56px] md:h-[58px] bg-white/95 backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.06)] border-b border-gray-200/60'
+          : 'h-[56px] sm:h-[60px] md:h-[64px] bg-white border-b border-transparent'
           }`}
       >
         <div className="w-full flex items-center justify-between px-6 sm:px-12 md:px-16 max-w-[1900px] mx-auto h-full">
@@ -77,7 +77,7 @@ export default function Navigation({ hideSpacer = false }) {
               <img
                 src="/Latest_LOGO SM title block_15-05-2026_222.png"
                 alt="SpaceMELD Architecture Studio Logo"
-                className={`w-auto object-contain transition-all duration-300 group-hover:scale-105 origin-left ${scrolled ? 'h-[46px] sm:h-[52px] md:h-[58px]' : 'h-[58px] sm:h-[68px] md:h-[76px]'
+                className={`w-auto object-contain transition-all duration-300 group-hover:scale-105 origin-left ${scrolled ? 'h-[30px] sm:h-[34px] md:h-[36px]' : 'h-[34px] sm:h-[40px] md:h-[42px]'
                   }`}
               />
             </a>
@@ -124,7 +124,7 @@ export default function Navigation({ hideSpacer = false }) {
 
       {/* SPACER SO HERO IMAGE SITS RIGHT BELOW */}
       {!hideSpacer && (
-        <div className={`w-full ${scrolled ? 'h-[64px] md:h-[72px]' : 'h-[72px] md:h-[82px]'} transition-all duration-300 bg-transparent`} />
+        <div className={`w-full ${scrolled ? 'h-[52px] sm:h-[56px] md:h-[58px]' : 'h-[56px] sm:h-[60px] md:h-[64px]'} transition-all duration-300 bg-transparent`} />
       )}
 
       {/* ZIKZAK FULL-SCREEN DARK OVERLAY MENU */}

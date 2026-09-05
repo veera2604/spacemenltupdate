@@ -144,7 +144,7 @@ export default function CareersPage() {
             </div>
 
             {/* Content Container - vertically centered within the single viewport */}
-            <div className="max-w-7xl mx-auto px-6 sm:px-12 py-6 sm:py-8 w-full h-full relative z-10 flex flex-col justify-center items-center text-center overflow-y-auto">
+            <div className="max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 py-6 sm:py-8 h-full relative z-10 flex flex-col justify-center items-center text-center overflow-y-auto">
               <motion.div
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -192,7 +192,7 @@ export default function CareersPage() {
               2. WHY JOIN US SECTION (4 PILLAR ICON COLUMNS)
              ==================================================================== */}
           <section className="py-20 sm:py-28 bg-[#F4F1EA] border-y border-[#1A1412]/10">
-            <div className="max-w-[1500px] mx-auto px-6 sm:px-12 md:px-16">
+            <div className="max-w-[1850px] 2xl:max-w-[1950px] mx-auto px-6 sm:px-12 md:px-16">
 
               {/* Section Header */}
               <motion.div
@@ -280,7 +280,7 @@ export default function CareersPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="bg-[#FAF8F5] py-20 sm:py-28 max-w-[1500px] mx-auto px-6 sm:px-12 md:px-16"
+            className="bg-[#FAF8F5] py-20 sm:py-28 max-w-[1850px] 2xl:max-w-[1950px] mx-auto px-6 sm:px-12 md:px-16"
           >
             <div className="bg-white rounded-2xl p-8 sm:p-14 border border-[#1A1412]/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="flex items-center gap-6 sm:gap-8 text-center md:text-left">

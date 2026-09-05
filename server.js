@@ -1,5 +1,5 @@
 if (!Object.hasOwn) {
-  Object.hasOwn = function(obj, prop) {
+  Object.hasOwn = function (obj, prop) {
     return Object.prototype.hasOwnProperty.call(obj, prop);
   };
 }
@@ -214,13 +214,13 @@ const handleContactInquiry = async (req, res) => {
             Thank you for contacting SpaceMeld Architects. We have received your project inquiry successfully.
           </p>
           <p style="font-size: 15px; color: #444444; line-height: 1.6;">
-            Our principal architects will review your project brief and connect with you shortly.
+            Our Team  will review your project brief and connect with you shortly.
           </p>
           <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 25px 0;" />
           <p style="font-size: 14px; color: #666666; margin: 0;">
             Regards,<br />
             <strong style="color: #222222;">SpaceMeld Architects</strong><br />
-            <span style="color: #888888; font-size: 13px;">Bengaluru • Vellore | www.spacemeldarchitects.com</span>
+            <span style="color: #888888; font-size: 13px;">Bengaluru • Vellore  www.spacemeldarchitects.com</span>
           </p>
         </div>
       `,
@@ -310,11 +310,11 @@ app.post('/api/apply', upload.fields([{ name: 'resumeFile', maxCount: 1 }, { nam
             </tr>
             <tr style="border-bottom: 1px solid #eeeeee;">
               <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Portfolio URL:</td>
-              <td style="padding: 14px 18px; color: #c48b57;">${portfolioUrl ? '<a href="'+portfolioUrl+'">'+portfolioUrl+'</a>' : 'Not provided'}</td>
+              <td style="padding: 14px 18px; color: #c48b57;">${portfolioUrl ? '<a href="' + portfolioUrl + '">' + portfolioUrl + '</a>' : 'Not provided'}</td>
             </tr>
             <tr style="border-bottom: 1px solid #eeeeee;">
               <td style="padding: 14px 18px; font-weight: bold; color: #666666;">LinkedIn Profile:</td>
-              <td style="padding: 14px 18px; color: #222222;">${linkedin ? '<a href="'+linkedin+'">'+linkedin+'</a>' : 'Not provided'}</td>
+              <td style="padding: 14px 18px; color: #222222;">${linkedin ? '<a href="' + linkedin + '">' + linkedin + '</a>' : 'Not provided'}</td>
             </tr>
           </table>
 

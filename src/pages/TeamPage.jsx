@@ -89,18 +89,18 @@ export default function TeamPage() {
 
       {/* Between Spaces Exact Centered Page Title & Narrative Intro */}
       <section className="relative w-full pt-16 pb-12 px-6 md:px-12 border-b border-gray-200">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-normal text-[#212121] font-['Cormorant_Garamond'] mb-6">
+        <div className="max-w-5xl mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal text-[#212121] font-['Cormorant_Garamond'] mb-6">
             Team
           </h1>
-          <p className="text-base sm:text-lg text-[#686868] font-normal leading-relaxed text-left md:text-justify">
+          <p className="text-base sm:text-lg md:text-xl text-[#686868] font-normal leading-relaxed text-left md:text-justify">
             SpaceMELD Architects has a strong multidisciplinary team of young and energetic architects, computational designers, and interior specialists from diverse backgrounds. We work very closely with a highly skilled network of structural engineers and craftsmen—believing strongly in design as an intensive dialogue between clients, consultants, and architects.
           </p>
         </div>
       </section>
 
       {/* Crew Category Tabs */}
-      <section className="max-w-7xl w-full mx-auto px-6 md:px-12 py-8">
+      <section className="max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 lg:px-20 py-8">
         <div className="flex flex-wrap items-center gap-6 sm:gap-8 border-b border-gray-200 pb-5">
           {crewTabs.map((tab) => {
             const isActive = selectedCrew === tab.key;
@@ -108,11 +108,10 @@ export default function TeamPage() {
               <button
                 key={tab.key}
                 onClick={() => setSelectedCrew(tab.key)}
-                className={`text-xs uppercase tracking-[0.22em] transition-all duration-300 pb-2 relative cursor-pointer ${
-                  isActive
-                    ? 'text-[#212121] font-bold'
-                    : 'text-gray-400 hover:text-[#212121]'
-                }`}
+                className={`text-xs sm:text-sm uppercase tracking-[0.22em] transition-all duration-300 pb-2 relative cursor-pointer ${isActive
+                  ? 'text-[#212121] font-bold'
+                  : 'text-gray-400 hover:text-[#212121]'
+                  }`}
               >
                 {isActive ? `. ${tab.label}` : tab.label}
                 {isActive && (
@@ -128,7 +127,7 @@ export default function TeamPage() {
       </section>
 
       {/* Exactly Between Spaces 33.3% Left Photo / 66.6% Right Narrative Profiles */}
-      <section className="max-w-7xl w-full mx-auto px-6 md:px-12 py-10 mb-28 flex-grow">
+      <section className="max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 lg:px-20 py-10 mb-28 flex-grow">
         <div className="flex flex-col gap-16 md:gap-24">
           <AnimatePresence mode="popLayout">
             {filteredTeam.map((member) => (

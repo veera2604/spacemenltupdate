@@ -31,7 +31,7 @@ const employeesList = [
   },
   {
     name: 'Selvaraj',
-    role: 'CREATIVE DESIGN DIRECTOR | ARCHITECTURE & INTERIORS',
+    role: "CREATIVE DESIGN DIRECTOR \nARCHITECTURE & INTERIORS",
     image: '/TEAM/SELVA.JPG',
     imagePosition: 'object-[center_top]',
   },
@@ -173,9 +173,9 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
       </div>
 
       {/* SECOND SECTION: BELIEFS & PHILOSOPHY */}
-      <div className="w-full about-section flex flex-col justify-center relative z-10 border-b border-[#D8C5AE]/60">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+      <div className="w-full about-section flex flex-col justify-center relative z-10 border-b border-[#D8C5AE]/60 overflow-hidden">
+        <div className="max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 lg:px-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
 
             {/* Left: Large Architecture Interior Image */}
             <motion.div
@@ -185,7 +185,7 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
               transition={{ duration: 0.8 }}
               className="lg:col-span-6"
             >
-              <div className="w-full aspect-[4/3] rounded-[2px] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.1)] border border-[#D8C5AE]/60 bg-[#111111] group">
+              <div className="w-full max-h-[50vh] xl:max-h-[54vh] aspect-[4/3] rounded-[2px] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.1)] border border-[#D8C5AE]/60 bg-[#111111] group mx-auto">
                 <img
                   src="/images/about_philosophy_courtyard.png"
                   alt="SpaceMELD Studio Courtyard"
@@ -214,19 +214,19 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
               </div>
 
               <div className="relative z-10">
-                <div className="w-10 h-10 border border-[#A66A2C]/40 flex items-center justify-center text-[#A66A2C] mb-6 rounded-[2px] bg-[#F8F5F0]">
+                <div className="w-10 h-10 border border-[#A66A2C]/40 flex items-center justify-center text-[#A66A2C] mb-5 rounded-[2px] bg-[#F8F5F0]">
                   <Box className="w-5 h-5 stroke-[1.3]" />
                 </div>
 
-                <h2 className="font-['Cormorant_Garamond'] text-3xl sm:text-4xl md:text-[42px] font-normal text-[#111111] leading-[1.15] tracking-tight mb-5">
+                <h2 className="font-['Cormorant_Garamond'] text-3xl sm:text-4xl md:text-[40px] font-normal text-[#111111] leading-[1.15] tracking-tight mb-4">
                   SpaceMELD is more<br />
                   than a name—<br />
                   <span className="font-normal text-[#111111]">it reflects what we believe.</span>
                 </h2>
 
-                <span className="w-10 h-[1.5px] bg-[#A66A2C] block my-5" />
+                <span className="w-10 h-[1.5px] bg-[#A66A2C] block my-4" />
 
-                <p className="font-['Manrope'] text-[#222222] text-sm sm:text-[15px] leading-[1.7] font-normal mb-4 max-w-[460px]">
+                <p className="font-['Manrope'] text-[#222222] text-sm sm:text-[15px] leading-[1.7] font-normal mb-3 max-w-[460px]">
                   Great architecture is never the work of one idea alone.<br />
                   It's a meld of creativity and functionality,<br />
                   vision and purpose,<br />
@@ -244,7 +244,7 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
 
       {/* VALUES SECTION: Exactly Four Equal Columns */}
       <div className="w-full about-section flex flex-col justify-center bg-[#F8F5F0] border-b border-[#D8C5AE]/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-12 w-full">
+        <div className="max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 lg:px-20">
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-[#D8C5AE]/60">
 
             {/* Column 1: People Icon */}
@@ -346,9 +346,9 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
       </div>
 
       {/* FINAL SECTION: Two-Column Layout Exactly Like Reference */}
-      <div className="w-full about-section flex flex-col justify-center relative z-10">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-stretch">
+      <div className="w-full about-section flex flex-col justify-center relative z-10 overflow-hidden">
+        <div className="max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 lg:px-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-stretch">
 
             {/* Left: Large Exterior Architecture Image */}
             <motion.div
@@ -358,7 +358,7 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
               transition={{ duration: 0.8 }}
               className="lg:col-span-6 flex"
             >
-              <div className="w-full min-h-[320px] sm:min-h-[360px] rounded-[2px] overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.12)] border border-[#D8C5AE]/60 bg-[#111111] group">
+              <div className="w-full max-h-[50vh] xl:max-h-[54vh] aspect-[4/3] rounded-[2px] overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.12)] border border-[#D8C5AE]/60 bg-[#111111] group my-auto">
                 <img
                   src="/images/about_closing_villa.png"
                   alt="SpaceMELD Residence & Landscape"
@@ -373,14 +373,14 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.8, delay: 0.15 }}
-              className="lg:col-span-6 flex flex-col justify-between p-8 sm:p-12 lg:p-14 bg-[#F8F5F0] rounded-[2px] relative border border-[#D8C5AE]/60 shadow-[0_15px_35px_rgba(0,0,0,0.06)]"
+              className="lg:col-span-6 flex flex-col justify-between p-6 sm:p-8 lg:p-10 xl:p-12 max-h-[50vh] xl:max-h-[54vh] my-auto bg-[#F8F5F0] rounded-[2px] relative border border-[#D8C5AE]/60 shadow-[0_15px_35px_rgba(0,0,0,0.06)]"
             >
               <div>
-                <span className="font-['Cormorant_Garamond'] text-6xl sm:text-7xl text-[#A66A2C]/30 leading-none block -mb-6 select-none font-normal">
+                <span className="font-['Cormorant_Garamond'] text-5xl sm:text-6xl text-[#A66A2C]/30 leading-none block -mb-4 select-none font-normal">
                   &ldquo;
                 </span>
 
-                <h3 className="font-['Cormorant_Garamond'] text-2xl sm:text-3xl md:text-[36px] font-normal text-[#111111] leading-[1.3] relative z-10 mb-8">
+                <h3 className="font-['Cormorant_Garamond'] text-2xl sm:text-3xl md:text-[34px] font-normal text-[#111111] leading-[1.3] relative z-10 mb-6">
                   We're here to help you<br />
                   write yours—<br />
                   one thoughtful design at a time.
@@ -388,7 +388,7 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
               </div>
 
               <div>
-                <span className="w-12 h-[1px] bg-[#A66A2C] block mb-6" />
+                <span className="w-12 h-[1px] bg-[#A66A2C] block mb-5" />
 
                 <span className="font-['Manrope'] text-xs sm:text-[13px] font-bold uppercase tracking-[0.15em] text-[#A66A2C] block">
                   SpaceMELD Architects
@@ -408,7 +408,7 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
       {showPeople && (
         <>
           {/* Team Full-Width Studio Group Banner Image with White Center Overlay */}
-          <div id="team" className="w-full about-section relative overflow-hidden bg-gray-900 border-t border-gray-200">
+          <div id="team" className="w-full h-[calc(100vh-60px)] relative overflow-hidden bg-black border-t border-gray-200 snap-start snap-always">
             <img
               src="/images/studio-team.jpg"
               alt="SpaceMELD Studio Team Group"
@@ -422,7 +422,7 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
           </div>
 
           {/* Cadence 3-Column Clean Portrait Grid of Employee Details */}
-          <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-20 snap-start h-auto scroll-snap-align-start flex flex-col justify-center min-h-[calc(100vh-84px)]">
+          <div className="max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 md:px-12 py-12 md:py-20 snap-start h-auto scroll-snap-align-start flex flex-col justify-center min-h-[calc(100vh-84px)]">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-12 gap-y-16">
               {employeesList.map((emp) => (
                 <motion.div
@@ -448,7 +448,7 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
                   </h3>
 
                   {/* Employee Role */}
-                  <span className="text-xs font-mono uppercase tracking-[0.18em] text-gray-500 mb-4">
+                  <span className="text-xs font-mono uppercase tracking-[0.18em] text-gray-500 mb-4 whitespace-pre-line text-center block">
                     {emp.role}
                   </span>
 

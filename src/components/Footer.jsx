@@ -1,7 +1,16 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowUp } from 'lucide-react';
 
 export default function Footer() {
+  const navigate = useNavigate();
+
+  const handleNavigate = (path, e) => {
+    if (e) e.preventDefault();
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const scrollToTop = () => {
     const container = document.getElementById('main-scroll-container');
     if (container) {
@@ -13,7 +22,7 @@ export default function Footer() {
 
   return (
     <footer className="w-full bg-white text-[#1A1412] border-t border-gray-200 relative">
-      <div className="w-full px-8 sm:px-12 md:px-16 pt-10 sm:pt-14 pb-12 sm:pb-16 flex flex-col lg:flex-row justify-between items-start lg:items-stretch min-h-[300px] gap-12 lg:gap-10">
+      <div className="max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 lg:px-20 pt-10 sm:pt-14 pb-12 sm:pb-16 flex flex-col lg:flex-row justify-between items-start lg:items-stretch min-h-[300px] gap-12 lg:gap-10">
 
         {/* LEFT COLUMN: Logo (Top), Legal/Copyright (Bottom) */}
         <div className="flex flex-col justify-between items-start lg:w-1/2">
@@ -22,22 +31,23 @@ export default function Footer() {
             <img
               src="/Latest_LOGO SM title block_15-05-2026_222.png"
               alt="SpaceMELD Architects"
-              className="h-16 sm:h-20 md:h-24 w-auto object-contain transform origin-top-left"
+              className="h-16 sm:h-20 md:h-24 w-auto object-contain transform origin-top-left cursor-pointer"
+              onClick={(e) => handleNavigate('/', e)}
             />
           </div>
 
           {/* Bottom Left: Legal Links & Copyright */}
           <div className="flex flex-col items-start mt-auto">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] sm:text-[11px] font-sans uppercase tracking-[0.15em] text-[#1A1412] mb-3">
-              <a href="/contact" className="hover:text-[#c48b57] transition-colors">
+              <button onClick={(e) => handleNavigate('/contact', e)} className="hover:text-[#c48b57] transition-colors cursor-pointer">
                 PRIVACY POLICY
-              </a>
-              <a href="/contact" className="hover:text-[#c48b57] transition-colors">
+              </button>
+              <button onClick={(e) => handleNavigate('/contact', e)} className="hover:text-[#c48b57] transition-colors cursor-pointer">
                 TERMS OF ARCHITECTURAL SERVICE
-              </a>
-              <a href="/contact" className="hover:text-[#c48b57] transition-colors">
+              </button>
+              <button onClick={(e) => handleNavigate('/contact', e)} className="hover:text-[#c48b57] transition-colors cursor-pointer">
                 COOKIE PREFERENCES
-              </a>
+              </button>
             </div>
 
             <p className="text-[10px] sm:text-[11px] font-sans uppercase tracking-[0.14em] text-[#1A1412] whitespace-nowrap">
@@ -57,9 +67,9 @@ export default function Footer() {
           </a>
 
           {/* Middle Right: Build Your Vision Button */}
-          <a
-            href="/contact"
-            className="flex items-center gap-3 bg-[#1A1412] hover:bg-[#c48b57] text-white px-8 py-3.5 rounded-full transition-all duration-300 group shadow-md hover:shadow-lg my-2 lg:my-0"
+          <button
+            onClick={(e) => handleNavigate('/contact', e)}
+            className="flex items-center gap-3 bg-[#1A1412] hover:bg-[#c48b57] text-white px-8 py-3.5 rounded-full transition-all duration-300 group shadow-md hover:shadow-lg my-2 lg:my-0 cursor-pointer"
           >
             <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#c48b57] group-hover:text-white transition-colors">
               <path d="M14 1.5C14 0.95 13.55 0.5 13 0.5H2C1.45 0.5 1 0.95 1 1.5M14 1.5V10.5C14 11.05 13.55 11.5 13 11.5H2C1.45 11.5 1 11.05 1 10.5V1.5M14 1.5L7.5 5.5L1 1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
@@ -69,7 +79,7 @@ export default function Footer() {
               <line x1="7" y1="17" x2="17" y2="7"></line>
               <polyline points="7 7 17 7 17 17"></polyline>
             </svg>
-          </a>
+          </button>
 
           {/* Bottom Right: Social Links & Back to Top */}
           <div className="flex flex-wrap lg:flex-nowrap items-center justify-end gap-6 mt-auto pt-2">
@@ -83,7 +93,7 @@ export default function Footer() {
                 <span className="text-[#1A1412]">.</span>Facebook
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/space_meld?utm_source=qr&igsi=MWZubnc5bGRqZTR4aw=="
                 target="_blank"
                 rel="noreferrer"
                 className="hover:text-[#c48b57] transition-colors flex items-center gap-1"
@@ -111,7 +121,7 @@ export default function Footer() {
             <button
               onClick={scrollToTop}
               aria-label="Back to top"
-              className="w-8 h-8 rounded-full bg-gray-100 hover:bg-[#c48b57] text-gray-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm shrink-0"
+              className="w-8 h-8 rounded-full bg-gray-100 hover:bg-[#c48b57] text-gray-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm shrink-0 cursor-pointer"
             >
               <ArrowUp className="w-3.5 h-3.5" />
             </button>

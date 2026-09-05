@@ -254,7 +254,7 @@ export default function ServicesPage() {
             </motion.div>
 
             {/* Foreground Content */}
-            <div className="relative z-20 max-w-[1500px] w-full mx-auto px-6 sm:px-12 md:px-16">
+            <div className="relative z-20 max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
                 {/* Left Column: Heading & Content */}
@@ -293,7 +293,7 @@ export default function ServicesPage() {
           {/* ====================================================================
               2. OUR SERVICES (STAGGERED POP-IN ARCHITECTURAL CARDS GRID)
              ==================================================================== */}
-          <section className="py-16 sm:py-24 max-w-[1500px] w-full mx-auto px-6 sm:px-12 md:px-16 relative z-10 min-h-[85vh] sm:min-h-screen flex flex-col justify-center">
+          <section className="py-16 sm:py-24 max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 relative z-10 min-h-[85vh] sm:min-h-screen flex flex-col justify-center">
 
             {/* Center Heading */}
             <motion.div
@@ -372,7 +372,7 @@ export default function ServicesPage() {
           {/* ====================================================================
               3. OUR PROCESS (STAGGERED POP TIMELINE WITH CIRCLE ICONS)
              ==================================================================== */}
-          <section className="py-16 sm:py-24 max-w-[1500px] w-full mx-auto px-6 sm:px-12 md:px-16 overflow-hidden min-h-[75vh] sm:min-h-[85vh] flex flex-col justify-center">
+          <section className="py-16 sm:py-24 max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 overflow-hidden min-h-[75vh] sm:min-h-[85vh] flex flex-col justify-center">
 
             {/* Center Heading */}
             <motion.div
@@ -453,7 +453,7 @@ export default function ServicesPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#141211]/95 via-[#141211]/85 to-[#141211]/95 pointer-events-none" />
 
-          <div className="max-w-[1500px] mx-auto relative z-10 flex flex-col sm:flex-row items-center justify-between gap-8">
+          <div className="max-w-[1850px] 2xl:max-w-[1950px] mx-auto relative z-10 flex flex-col sm:flex-row items-center justify-between gap-8">
             <div className="text-center sm:text-left">
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-serif font-light text-white tracking-tight mb-2 font-['Cormorant_Garamond']">
                 Let's build something extraordinary.

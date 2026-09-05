@@ -126,7 +126,7 @@ export default function Contact() {
       </div>
 
       {/* Header matching document */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 mb-16 text-center relative z-10">
+      <div className="max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 lg:px-20 mb-16 text-center relative z-10">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -141,7 +141,7 @@ export default function Contact() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-4xl sm:text-6xl font-bold uppercase font-['Cormorant_Garamond'] text-white tracking-tight leading-none mb-6"
+          className="text-4xl sm:text-6xl lg:text-7xl font-bold uppercase font-['Cormorant_Garamond'] text-white tracking-tight leading-none mb-6"
         >
           LET’S SHAPE YOUR <span className="text-gradient-gold font-bold">VISION</span>
         </motion.h2>
@@ -150,18 +150,18 @@ export default function Contact() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="max-w-3xl mx-auto space-y-3"
+          className="max-w-4xl mx-auto space-y-3"
         >
-          <p className="text-base sm:text-lg text-white font-medium">
+          <p className="text-base sm:text-lg lg:text-xl text-white font-medium">
             Have a vision in mind? Let’s bring it to life.
           </p>
-          <p className="text-xs sm:text-sm md:text-base text-gray-300 font-light leading-relaxed">
+          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-300 font-light leading-relaxed">
             Whether you are planning a new home, transforming an existing space, developing a commercial project, or looking for an integrated design and build solution, we are here to collaborate. From the first idea to the final detail, we work closely with you to create spaces.
           </p>
         </motion.div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start relative z-10">
+      <div className="max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 lg:px-20 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start relative z-10">
         {/* Left Column: Form with exact fields from the table */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -501,7 +501,7 @@ export default function Contact() {
                   </h3>
 
                   <p className="text-sm text-gray-600 leading-relaxed font-normal mb-8">
-                    Your inquiry has been submitted successfully to <span className="font-bold text-[#1A1412]">info@spacemeldarchitects.com</span>. Our principal architects will contact you shortly.
+                    Your inquiry has been submitted successfully to <span className="font-bold text-[#1A1412]">info@spacemeldarchitects.com</span>. Our Team will contact you shortly.
                   </p>
 
                   <div className="flex flex-col sm:flex-row items-center gap-3">

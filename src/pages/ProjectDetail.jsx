@@ -46,7 +46,7 @@ export default function ProjectDetail() {
 
         <main className="pt-24 pb-32">
           {/* Back Button */}
-          <div className="max-w-[1400px] mx-auto px-8 mb-8">
+          <div className="max-w-[1850px] 2xl:max-w-[1950px] mx-auto px-8 mb-8">
             <Link
               to="/works"
               className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-gray-400 hover:text-[#c48b57] transition-colors group font-semibold"
@@ -56,7 +56,7 @@ export default function ProjectDetail() {
             </Link>
           </div>
 
-          <article className="max-w-[1400px] mx-auto px-8 flex flex-col items-center">
+          <article className="max-w-[1850px] 2xl:max-w-[1950px] mx-auto px-8 flex flex-col items-center">
 
             {/* 1. Hero Image */}
             <motion.div

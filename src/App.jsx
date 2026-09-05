@@ -12,11 +12,18 @@ import Preloader from './components/Preloader';
 import './index.css';
 
 function App() {
-  const [showPreloader, setShowPreloader] = useState(true);
+  const [showPreloader, setShowPreloader] = useState(() => {
+    return !sessionStorage.getItem('hasSeenPreloader');
+  });
+
+  const handlePreloaderComplete = () => {
+    sessionStorage.setItem('hasSeenPreloader', 'true');
+    setShowPreloader(false);
+  };
 
   return (
     <BrowserRouter>
-      {showPreloader && <Preloader onComplete={() => setShowPreloader(false)} />}
+      {showPreloader && <Preloader onComplete={handlePreloaderComplete} />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/works" element={<Works />} />

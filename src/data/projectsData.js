@@ -93,8 +93,7 @@ export const projectsData = [
     },
     gallery: [
       '/PROJECTS/Ravi_-_D/A3.jpg',
-      '/PROJECTS/Ravi_-_D/A5.jpg',
-      '/PROJECTS/Ravi_-_D/Project_Home_page_Color.jpg'
+      '/PROJECTS/Ravi_-_D/A5.jpg'
     ]
   },
   {
@@ -232,7 +231,8 @@ export const projectsData = [
     specs: {
       projectType: 'Commercial',
       location: 'Tiruvannamalai',
-      projectStatus: 'Proposal'
+      projectStatus: 'Proposal',
+      builtUpArea: '1340 SQ.M.'
     },
     gallery: [
       '/PROJECTS/Commercial_-_D/A.jpg',

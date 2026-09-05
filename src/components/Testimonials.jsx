@@ -46,7 +46,7 @@ export default function Testimonials() {
       {/* Ambient Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#c48b57]/10 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 mb-10 text-center">
+      <div className="max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 lg:px-20 mb-10 text-center">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           whileInView={{ opacity: 1, y: 0 }}
