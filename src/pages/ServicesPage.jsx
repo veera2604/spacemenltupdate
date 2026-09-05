@@ -237,20 +237,13 @@ export default function ServicesPage() {
               transition={{ duration: 1.2, delay: 0.3 }}
               className="absolute inset-y-0 right-0 w-[85%] md:w-[65%] lg:w-[60%] z-0"
             >
-              {/* CSS gradient mask to blend smoothly into the cream background */}
-              <div
-                className="w-full h-full"
-                style={{
-                  maskImage: 'linear-gradient(to right, transparent 0%, black 40%, black 100%)',
-                  WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 40%, black 100%)'
-                }}
-              >
-                <img
-                  src="/images/services_hero_dusk.png"
-                  alt="Architecture hero"
-                  className="w-full h-full object-cover object-left"
-                />
-              </div>
+              <img
+                src="/images/services_hero_dusk.png"
+                alt="Architecture hero"
+                className="w-full h-full object-cover object-left brightness-[0.98]"
+              />
+              {/* Clean gradient overlay matching cream background for seamless mobile rendering */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#FAF8F5] via-[#FAF8F5]/60 to-transparent pointer-events-none z-10" />
             </motion.div>
 
             {/* Foreground Content */}
