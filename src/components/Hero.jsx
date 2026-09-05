@@ -74,27 +74,27 @@ export default function Hero() {
       </AnimatePresence>
 
       {/* Project Title & "OPEN PROJECT" Link */}
-      <div className="absolute left-8 sm:left-16 md:left-24 lg:left-32 top-1/2 -translate-y-1/2 z-20 max-w-2xl text-left pointer-events-auto">
+      <div className="absolute left-4 sm:left-12 md:left-20 lg:left-32 top-1/2 -translate-y-1/2 z-20 max-w-[calc(100vw-80px)] sm:max-w-xl md:max-w-2xl text-left pointer-events-auto">
         <motion.div
           key={currentSlide}
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="text-xs md:text-sm font-mono tracking-[0.3em] text-gray-300 mb-3 uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+          <div className="text-[11px] sm:text-xs md:text-sm font-mono tracking-[0.25em] text-gray-300 mb-2 sm:mb-3 uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
             {slides[currentSlide].number}
           </div>
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[80px] font-light text-white tracking-tight leading-[1.05] uppercase font-['Cormorant_Garamond'] mb-6 drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+          <h1 className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-[76px] font-light text-white tracking-tight leading-[1.1] uppercase font-['Cormorant_Garamond'] mb-4 sm:mb-6 drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] break-words max-w-full">
             {slides[currentSlide].title}
           </h1>
           <div
             onClick={() => navigate(slides[currentSlide].link)}
-            className="inline-flex items-center gap-4 cursor-pointer group"
+            className="inline-flex items-center gap-3 sm:gap-4 cursor-pointer group"
           >
-            <span className="text-xs md:text-sm uppercase tracking-[0.25em] font-bold text-white group-hover:text-[#c48b57] transition-colors drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+            <span className="text-[11px] sm:text-xs md:text-sm uppercase tracking-[0.25em] font-bold text-white group-hover:text-[#c48b57] transition-colors drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
               Open Project
             </span>
-            <div className="w-12 md:w-20 h-[2px] bg-white group-hover:bg-[#c48b57] group-hover:w-28 transition-all duration-300 shadow-lg" />
+            <div className="w-10 sm:w-16 md:w-20 h-[2px] bg-white group-hover:bg-[#c48b57] group-hover:w-24 transition-all duration-300 shadow-lg" />
           </div>
         </motion.div>
       </div>
@@ -102,12 +102,12 @@ export default function Hero() {
       {/* Animated Left Architectural Circle-Arrow Button */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 md:left-10 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center group focus:outline-none cursor-pointer"
+        className="absolute left-1 sm:left-4 md:left-10 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center group focus:outline-none cursor-pointer p-1"
         aria-label="Previous Slide"
       >
         <svg
           viewBox="0 0 110 70"
-          className="w-14 h-9 md:w-20 md:h-12 text-white/90 group-hover:text-white transition-all duration-500 overflow-visible"
+          className="w-10 h-7 sm:w-14 sm:h-9 md:w-20 md:h-12 text-white/90 group-hover:text-white transition-all duration-500 overflow-visible"
           style={{ filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.9)) drop-shadow(0px 0px 12px rgba(0,0,0,0.7))' }}
           fill="none"
         >
@@ -144,12 +144,12 @@ export default function Hero() {
       {/* Animated Right Architectural Circle-Arrow Button */}
       <button
         onClick={nextSlide}
-        className="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center group focus:outline-none cursor-pointer"
+        className="absolute right-1 sm:right-4 md:right-10 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center group focus:outline-none cursor-pointer p-1"
         aria-label="Next Slide"
       >
         <svg
           viewBox="0 0 110 70"
-          className="w-14 h-9 md:w-20 md:h-12 text-white/90 group-hover:text-white transition-all duration-500 overflow-visible"
+          className="w-10 h-7 sm:w-14 sm:h-9 md:w-20 md:h-12 text-white/90 group-hover:text-white transition-all duration-500 overflow-visible"
           style={{ filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.9)) drop-shadow(0px 0px 12px rgba(0,0,0,0.7))' }}
           fill="none"
         >

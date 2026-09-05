@@ -438,7 +438,7 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
                     <img
                       src={emp.image}
                       alt={emp.name}
-                      className={`w-full h-full object-cover ${emp.imagePosition || 'object-center'} grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out`}
+                      className={`w-full h-full object-cover ${emp.imagePosition || 'object-center'} grayscale-0 md:grayscale md:group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out`}
                     />
                   </div>
 

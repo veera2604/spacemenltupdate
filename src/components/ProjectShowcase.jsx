@@ -131,13 +131,13 @@ export default function ProjectShowcase({ limit }) {
         <img
           src={project.partialImage || project.heroImage}
           alt={`${project.title} partial color`}
-          className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out group-hover:opacity-0 group-hover:scale-[1.03]"
+          className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out opacity-0 md:opacity-100 md:group-hover:opacity-0 group-hover:scale-[1.03]"
           loading="lazy"
         />
         <img
           src={project.heroImage}
           alt={project.title}
-          className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out scale-100 group-hover:scale-[1.03]"
+          className="absolute inset-0 w-full h-full object-cover opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-700 ease-out scale-100 group-hover:scale-[1.03]"
           loading="lazy"
         />
         <OpenCaseOverlay />
