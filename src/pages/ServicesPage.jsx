@@ -237,13 +237,20 @@ export default function ServicesPage() {
               transition={{ duration: 1.2, delay: 0.3 }}
               className="absolute inset-y-0 right-0 w-[85%] md:w-[65%] lg:w-[60%] z-0"
             >
-              <img
-                src="/images/services_hero_dusk.png"
-                alt="Architecture hero"
-                className="w-full h-full object-cover object-left brightness-[0.98]"
-              />
-              {/* Clean gradient overlay matching cream background for seamless mobile rendering */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#FAF8F5] via-[#FAF8F5]/60 to-transparent pointer-events-none z-10" />
+              {/* CSS gradient mask to blend smoothly into the cream background */}
+              <div
+                className="w-full h-full"
+                style={{
+                  maskImage: 'linear-gradient(to right, transparent 0%, black 40%, black 100%)',
+                  WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 40%, black 100%)'
+                }}
+              >
+                <img
+                  src="/images/services_hero_dusk.png"
+                  alt="Architecture hero"
+                  className="w-full h-full object-cover object-left"
+                />
+              </div>
             </motion.div>
 
             {/* Foreground Content */}
@@ -315,11 +322,49 @@ export default function ServicesPage() {
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8 items-stretch"
             >
               {coreServices.map((svc) => (
-                <ServiceCardComponent
+                <motion.div
                   key={svc.id}
-                  svc={svc}
-                  handleInquiryClick={handleInquiryClick}
-                />
+                  variants={serviceCardVariants}
+                  whileHover={{ y: -10, transition: { duration: 0.3 } }}
+                  onClick={(e) => handleInquiryClick(e, svc.title)}
+                  className="group cursor-pointer bg-white/95 rounded-2xl p-4 sm:p-5 border border-[#1A1412]/5 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_16px_40px_rgba(200,100,70,0.12)] transition-all duration-500 flex flex-col justify-between"
+                >
+                  <div>
+                    {/* Architectural Photograph with Inner Zoom & Grayscale Pop */}
+                    <div className="w-full aspect-[16/11] rounded-xl overflow-hidden bg-gray-100 relative mb-5">
+                      <motion.img
+                        variants={imagePopVariants}
+                        src={svc.image}
+                        alt={svc.title}
+                        className="w-full h-full object-cover grayscale contrast-[1.1] brightness-[0.92] group-hover:grayscale-0 group-hover:contrast-100 group-hover:brightness-100 group-hover:scale-110 transition-all duration-700 ease-out"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+
+                      {/* Bottom Left Number Overlay */}
+                      <div className="absolute bottom-3 left-4 text-white text-xl sm:text-2xl font-bold font-mono tracking-wider drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] flex items-center gap-1.5">
+                        <span>{svc.number}</span>
+                      </div>
+                    </div>
+
+                    {/* Title, Tagline & Description */}
+                    <h3 className="text-xs sm:text-sm font-mono uppercase tracking-[0.24em] font-extrabold text-[#1A1412] mb-1 group-hover:text-[#C86446] transition-colors">
+                      {svc.title}
+                    </h3>
+
+                    {svc.tagline && (
+                      <p className="text-[11px] font-sans uppercase tracking-wider text-[#C86446] font-semibold mb-2.5">
+                        {svc.tagline}
+                      </p>
+                    )}
+
+                    <p className="text-xs sm:text-sm text-[#5c5755] leading-relaxed font-light">
+                      {svc.description}
+                    </p>
+                  </div>
+
+
+                </motion.div>
               ))}
             </motion.div>
           </section>

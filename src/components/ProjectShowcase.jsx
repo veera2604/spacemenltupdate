@@ -74,14 +74,21 @@ export default function ProjectShowcase({ limit }) {
     rightCol = sliced.filter((_, idx) => idx % 2 !== 0);
   }
 
-  const getLeftAspect = (idx) => {
-    const sequence = ['aspect-[4/3]', 'aspect-[4/3]', 'aspect-[4/3]', 'aspect-[4/3]', 'aspect-[4/3]', 'aspect-[4/3]'];
-    return sequence[idx % sequence.length];
-  };
-
-  const getRightAspect = (idx) => {
-    const sequence = ['aspect-[16/10]', 'aspect-[16/10]', 'aspect-[16/10]', 'aspect-[16/10]', 'aspect-[16/10]'];
-    return sequence[idx % sequence.length];
+  const getProjectAspect = (project) => {
+    // Height Adjustment: Taller aspect-ratio for "THE CANOPY" (aravind) and Green Frame
+    if (project.id === 'aravind' || project.title?.toUpperCase().includes('CANOPY')) {
+      return 'aspect-[3/4]'; // Taller, highly balanced vertical height for The Canopy
+    }
+    if (project.id === 'greenframe') {
+      return 'aspect-[4/5]';
+    }
+    if (project.id === 'mangalam') {
+      return 'aspect-[16/10]';
+    }
+    if (project.id === 'venky') {
+      return 'aspect-[4/3]';
+    }
+    return project.category === 'Commercial' ? 'aspect-[16/10]' : 'aspect-[4/3]';
   };
 
   const getArea = (project) => {
@@ -123,7 +130,7 @@ export default function ProjectShowcase({ limit }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
-      className="group flex flex-col w-full cursor-pointer"
+      className="group flex flex-col w-full cursor-pointer mb-12 sm:mb-16 md:mb-20 inline-block break-inside-avoid"
       onClick={() => navigate(`/project/${project.id}`)}
     >
       {/* 1. Image Container */}
@@ -150,10 +157,17 @@ export default function ProjectShowcase({ limit }) {
     </motion.div>
   );
 
+  // All 11 Projects in order for seamless Masonry flow
+  const allProjects = selectedCategory === 'All'
+    ? projectsData
+    : projectsData.filter((p) => p.category === selectedCategory);
+
+  const displayProjects = limit ? allProjects.slice(0, limit) : allProjects;
+
   return (
     <section className="bg-[#FAF8F5] text-[#1A1412] relative min-h-screen pb-24 font-sans overflow-hidden">
       <div className="max-w-[1700px] 2xl:max-w-[1850px] w-full mx-auto px-6 sm:px-10 md:px-14 lg:px-16 pt-8 sm:pt-12">
-        {/* TOP HEADER SECTION MATCHING NETLIFY SCREENSHOT 1 */}
+        {/* TOP HEADER SECTION */}
         {!limit && (
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 sm:mb-16 md:mb-20">
             <div>
@@ -177,35 +191,21 @@ export default function ProjectShowcase({ limit }) {
           </div>
         )}
 
-        {/* 2-COLUMN STAGGERED GRID MATCHING EXACT NETLIFY SCREENSHOTS */}
+        {/* MASONRY GRID CONTAINER USING TAILWIND CSS COLUMNS */}
         <motion.div
           key={selectedCategory}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 lg:gap-20 items-start"
+          className="columns-1 md:columns-2 gap-12 md:gap-16 lg:gap-20 block w-full"
         >
-          {/* LEFT COLUMN (6 items) */}
-          <div className="flex flex-col gap-12 sm:gap-16 md:gap-20 w-full">
-            {leftCol.map((project, idx) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                aspectClass={getLeftAspect(idx)}
-              />
-            ))}
-          </div>
-
-          {/* RIGHT COLUMN (5 items, staggered down by md:mt-28) */}
-          <div className="flex flex-col gap-12 sm:gap-16 md:gap-20 w-full md:mt-28 lg:mt-36">
-            {rightCol.map((project, idx) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                aspectClass={getRightAspect(idx)}
-              />
-            ))}
-          </div>
+          {displayProjects.map((project, idx) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              aspectClass={getProjectAspect(project)}
+            />
+          ))}
         </motion.div>
       </div>
 
