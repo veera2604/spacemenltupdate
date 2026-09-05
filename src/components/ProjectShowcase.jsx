@@ -108,7 +108,7 @@ export default function ProjectShowcase({ limit }) {
     </div>
   );
 
-  const ProjectCard = ({ project }) => (
+  const ProjectCard = ({ project, isPriority = false }) => (
     <motion.div
       initial={{ opacity: 0, y: 35 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -118,20 +118,22 @@ export default function ProjectShowcase({ limit }) {
       onClick={() => navigate(`/project/${project.id}`)}
     >
       {/* 1. Image Container showing 100% FULL UNCROPPED view of every project image */}
-      <div className="w-full relative overflow-hidden bg-[#1a1918] rounded-none shadow-sm">
+      <div className="w-full relative overflow-hidden bg-[#e8e4df] rounded-none shadow-sm min-h-[220px]">
         {/* Base B&W / Partial Image establishing natural image aspect ratio */}
         <img
           src={project.partialImage || project.heroImage}
           alt={`${project.title} partial color`}
           className="w-full h-auto block transition-all duration-700 ease-out opacity-0 md:opacity-100 md:group-hover:opacity-0 group-hover:scale-[1.03]"
-          loading="lazy"
+          loading={isPriority ? "eager" : "lazy"}
+          decoding="async"
         />
         {/* Color Hero Image overlay filling exact natural container height */}
         <img
           src={project.heroImage}
           alt={project.title}
           className="absolute inset-0 w-full h-full object-cover opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-700 ease-out scale-100 group-hover:scale-[1.03]"
-          loading="lazy"
+          loading={isPriority ? "eager" : "lazy"}
+          decoding="async"
         />
         <OpenCaseOverlay />
       </div>
@@ -180,20 +182,22 @@ export default function ProjectShowcase({ limit }) {
         >
           {/* LEFT COLUMN */}
           <div className="flex flex-col gap-12 sm:gap-16 md:gap-20 w-full">
-            {leftCol.map((project) => (
+            {leftCol.map((project, idx) => (
               <ProjectCard
                 key={project.id}
                 project={project}
+                isPriority={idx === 0}
               />
             ))}
           </div>
 
           {/* RIGHT COLUMN (Staggered Down by md:mt-28) */}
           <div className="flex flex-col gap-12 sm:gap-16 md:gap-20 w-full md:mt-28 lg:mt-36">
-            {rightCol.map((project) => (
+            {rightCol.map((project, idx) => (
               <ProjectCard
                 key={project.id}
                 project={project}
+                isPriority={idx === 0}
               />
             ))}
           </div>
