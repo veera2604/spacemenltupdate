@@ -53,14 +53,14 @@ export default function HomeProjectsSection() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               onClick={() => navigate(`/project/${project.id}`)}
               className={`group cursor-pointer flex flex-col ${
-                index === 0 || index === 3 ? 'md:col-span-2 lg:col-span-2 aspect-[16/9]' : 'col-span-1 aspect-[4/5]'
+                index === 0 || index === 3 ? 'md:col-span-2 lg:col-span-2' : 'col-span-1'
               }`}
             >
-              <div className="w-full h-full overflow-hidden bg-[#f4f4f4] relative">
+              <div className="w-full relative overflow-hidden bg-[#1a1918] rounded-none shadow-sm">
                 <img
                   src={project.heroImage}
                   alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
+                  className="w-full h-auto block group-hover:scale-[1.03] transition-transform duration-700 ease-in-out"
                 />
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
