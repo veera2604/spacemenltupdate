@@ -36,24 +36,24 @@ export default function ProjectShowcase({ limit }) {
     };
   }, []);
 
-  // Exact 11-project staggered column distribution matching Netlify website:
+  // Exact 11-project 2-column staggered grid matching user annotated drawing:
   // LEFT COLUMN (6 projects):
-  // 1. Green Frame Villa (greenframe)
-  // 2. Shadow Box (rajesh)
-  // 3. Urban Nest (kandhasamy)
-  // 4. The Brick Canvas (suriya)
-  // 5. The Canopy (aravind)
-  // 6. Depth in Projection (venky)
+  // 1. Green Frame Villa (greenframe) -> Landscape
+  // 2. Shadow Box (rajesh) -> Portrait
+  // 3. Urban Nest (kandhasamy) -> Portrait
+  // 4. The Brick Canvas (suriya) -> Landscape
+  // 5. The Canopy (aravind) -> Portrait
+  // 6. Mangalam Towers (mangalam) -> Wide Commercial Banner
   //
-  // RIGHT COLUMN (5 projects, staggered down):
-  // 1. The Louvered House (suganthi)
-  // 2. Layered Living (ravi)
-  // 3. The Framed House (rakesh)
-  // 4. Pattern Residence (arunkumar)
-  // 5. Mangalam Towers (mangalam)
-  
-  const leftProjectIds = ['greenframe', 'rajesh', 'kandhasamy', 'suriya', 'aravind', 'venky'];
-  const rightProjectIds = ['suganthi', 'ravi', 'rakesh', 'arunkumar', 'mangalam'];
+  // RIGHT COLUMN (5 projects, staggered down by md:mt-28):
+  // 1. The Louvered House (suganthi) -> Portrait
+  // 2. Depth in Projection (venky) -> Landscape
+  // 3. Layered Living (ravi) -> Portrait
+  // 4. The Framed House (rakesh) -> Landscape
+  // 5. Pattern Residence (arunkumar) -> Portrait
+
+  const leftProjectIds = ['greenframe', 'rajesh', 'kandhasamy', 'suriya', 'aravind', 'mangalam'];
+  const rightProjectIds = ['suganthi', 'venky', 'ravi', 'rakesh', 'arunkumar'];
 
   let leftCol = [];
   let rightCol = [];
@@ -74,21 +74,33 @@ export default function ProjectShowcase({ limit }) {
     rightCol = sliced.filter((_, idx) => idx % 2 !== 0);
   }
 
-  const getProjectAspect = (project) => {
-    // Height Adjustment: Taller aspect-ratio for "THE CANOPY" (aravind) and Green Frame
-    if (project.id === 'aravind' || project.title?.toUpperCase().includes('CANOPY')) {
-      return 'aspect-[3/4]'; // Taller, highly balanced vertical height for The Canopy
+  const getAspectClass = (project) => {
+    switch (project.id) {
+      case 'greenframe':
+        return 'aspect-[16/10]';
+      case 'suganthi':
+        return 'aspect-[3/4]';
+      case 'rajesh':
+        return 'aspect-[3/4]';
+      case 'ravi':
+        return 'aspect-[3/4]';
+      case 'kandhasamy':
+        return 'aspect-[3/4]';
+      case 'rakesh':
+        return 'aspect-[16/10]';
+      case 'suriya':
+        return 'aspect-[16/10]';
+      case 'arunkumar':
+        return 'aspect-[3/4]';
+      case 'aravind':
+        return 'aspect-[3/4]';
+      case 'mangalam':
+        return 'aspect-[16/9]';
+      case 'venky':
+        return 'aspect-[16/10]';
+      default:
+        return 'aspect-[4/3]';
     }
-    if (project.id === 'greenframe') {
-      return 'aspect-[4/5]';
-    }
-    if (project.id === 'mangalam') {
-      return 'aspect-[16/10]';
-    }
-    if (project.id === 'venky') {
-      return 'aspect-[4/3]';
-    }
-    return project.category === 'Commercial' ? 'aspect-[16/10]' : 'aspect-[4/3]';
   };
 
   const getArea = (project) => {
@@ -130,7 +142,7 @@ export default function ProjectShowcase({ limit }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
-      className="group flex flex-col w-full cursor-pointer mb-12 sm:mb-16 md:mb-20 inline-block break-inside-avoid"
+      className="group flex flex-col w-full cursor-pointer"
       onClick={() => navigate(`/project/${project.id}`)}
     >
       {/* 1. Image Container */}
@@ -156,13 +168,6 @@ export default function ProjectShowcase({ limit }) {
       </div>
     </motion.div>
   );
-
-  // All 11 Projects in order for seamless Masonry flow
-  const allProjects = selectedCategory === 'All'
-    ? projectsData
-    : projectsData.filter((p) => p.category === selectedCategory);
-
-  const displayProjects = limit ? allProjects.slice(0, limit) : allProjects;
 
   return (
     <section className="bg-[#FAF8F5] text-[#1A1412] relative min-h-screen pb-24 font-sans overflow-hidden">
@@ -191,21 +196,35 @@ export default function ProjectShowcase({ limit }) {
           </div>
         )}
 
-        {/* MASONRY GRID CONTAINER USING TAILWIND CSS COLUMNS */}
+        {/* 2-COLUMN STAGGERED GRID MATCHING ANNOTATED DRAWING */}
         <motion.div
           key={selectedCategory}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4 }}
-          className="columns-1 md:columns-2 gap-12 md:gap-16 lg:gap-20 block w-full"
+          className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 lg:gap-20 items-start"
         >
-          {displayProjects.map((project, idx) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              aspectClass={getProjectAspect(project)}
-            />
-          ))}
+          {/* LEFT COLUMN */}
+          <div className="flex flex-col gap-12 sm:gap-16 md:gap-20 w-full">
+            {leftCol.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                aspectClass={getAspectClass(project)}
+              />
+            ))}
+          </div>
+
+          {/* RIGHT COLUMN (Staggered Down by md:mt-28) */}
+          <div className="flex flex-col gap-12 sm:gap-16 md:gap-20 w-full md:mt-28 lg:mt-36">
+            {rightCol.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                aspectClass={getAspectClass(project)}
+              />
+            ))}
+          </div>
         </motion.div>
       </div>
 
@@ -230,11 +249,10 @@ export default function ProjectShowcase({ limit }) {
                 setSelectedCategory(cat.key);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className={`px-4 sm:px-5 py-2 rounded-full text-[11px] sm:text-xs font-mono tracking-wider uppercase whitespace-nowrap transition-all duration-300 cursor-pointer ${
-                isActive
+              className={`px-4 sm:px-5 py-2 rounded-full text-[11px] sm:text-xs font-mono tracking-wider uppercase whitespace-nowrap transition-all duration-300 cursor-pointer ${isActive
                   ? 'bg-[#C86446] text-white font-bold shadow-md'
                   : 'text-white/75 hover:text-white hover:bg-white/10 font-medium'
-              }`}
+                }`}
             >
               {cat.label}
             </button>
