@@ -27,6 +27,11 @@ export default function Navigation({ hideSpacer = false }) {
 
   const isHome = location.pathname === '/';
 
+  // Automatically close mobile overlay menu whenever the route changes
+  React.useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
   React.useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -41,7 +46,7 @@ export default function Navigation({ hideSpacer = false }) {
   }, []);
 
   const handleNavClick = (e, href) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setMenuOpen(false);
 
     if (href === '/' || href === '#home') {
@@ -134,7 +139,7 @@ export default function Navigation({ hideSpacer = false }) {
             initial={{ y: '-100%', opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: '-100%', opacity: 0 }}
-            transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
+            transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
             className="fixed inset-0 bg-[#181818] text-white z-50 flex flex-col justify-between p-6 sm:p-12 md:p-16 overflow-y-auto"
           >
             {/* Top Bar inside Menu */}
