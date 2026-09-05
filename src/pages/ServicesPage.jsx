@@ -228,7 +228,7 @@ export default function ServicesPage() {
           {/* ====================================================================
               1. HERO SECTION (MATCHING DESIGN MOCKUP WITH ENTRANCE REVEAL)
              ==================================================================== */}
-          <section id="services-intro" className="relative pt-[90px] w-full overflow-hidden flex flex-col justify-center min-h-[75vh] sm:min-h-[85vh] py-16 sm:py-24 bg-[#FAF8F5]">
+          <section id="services-intro" className="relative pt-[100px] sm:pt-[120px] pb-12 sm:pb-16 w-full overflow-hidden flex flex-col justify-center bg-[#FAF8F5]">
 
             {/* Background Architectural Image (Right Side) */}
             <motion.div
@@ -254,7 +254,7 @@ export default function ServicesPage() {
             </motion.div>
 
             {/* Foreground Content */}
-            <div className="relative z-20 max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16">
+            <div className="relative z-20 max-w-[1400px] xl:max-w-[1600px] w-full mx-auto px-6 sm:px-12 md:px-16">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
                 {/* Left Column: Heading & Content */}
@@ -293,7 +293,7 @@ export default function ServicesPage() {
           {/* ====================================================================
               2. OUR SERVICES (STAGGERED POP-IN ARCHITECTURAL CARDS GRID)
              ==================================================================== */}
-          <section className="py-16 sm:py-24 max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 relative z-10 min-h-[85vh] sm:min-h-screen flex flex-col justify-center">
+          <section className="py-16 sm:py-24 max-w-[1400px] xl:max-w-[1600px] w-full mx-auto px-6 sm:px-12 md:px-16 relative z-10 flex flex-col justify-center">
 
             {/* Center Heading */}
             <motion.div
@@ -372,7 +372,7 @@ export default function ServicesPage() {
           {/* ====================================================================
               3. OUR PROCESS (STAGGERED POP TIMELINE WITH CIRCLE ICONS)
              ==================================================================== */}
-          <section className="py-16 sm:py-24 max-w-[1850px] 2xl:max-w-[1950px] w-full mx-auto px-6 sm:px-12 md:px-16 overflow-hidden min-h-[75vh] sm:min-h-[85vh] flex flex-col justify-center">
+          <section className="py-16 sm:py-24 max-w-[1400px] xl:max-w-[1500px] w-full mx-auto px-6 sm:px-12 md:px-16 overflow-hidden flex flex-col items-center justify-center">
 
             {/* Center Heading */}
             <motion.div
