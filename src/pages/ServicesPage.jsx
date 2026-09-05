@@ -235,7 +235,7 @@ export default function ServicesPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1.2, delay: 0.3 }}
-              className="absolute inset-y-0 right-0 w-[85%] md:w-[65%] lg:w-[60%] z-0"
+              className="absolute inset-y-0 right-0 w-[90%] md:w-[65%] lg:w-[60%] z-0 opacity-40 sm:opacity-60 lg:opacity-100"
             >
               {/* CSS gradient mask to blend smoothly into the cream background */}
               <div
@@ -252,6 +252,9 @@ export default function ServicesPage() {
                 />
               </div>
             </motion.div>
+
+            {/* Mobile-Only Cream Gradient Mask to Ensure 100% Text Legibility */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#FAF8F5] via-[#FAF8F5]/95 to-[#FAF8F5]/20 lg:hidden pointer-events-none z-10" />
 
             {/* Foreground Content */}
             <div className="relative z-20 max-w-[1400px] xl:max-w-[1600px] w-full mx-auto px-6 sm:px-12 md:px-16">
@@ -270,17 +273,17 @@ export default function ServicesPage() {
                       <span className="w-1.5 h-1.5 rounded-full border border-[#C86446] rotate-45 mx-1" />
                       <span className="w-12 h-[1px] bg-[#C86446]" />
                     </div>
-                    <span className="text-[10px] sm:text-xs font-sans uppercase tracking-[0.25em] text-[#C86446] font-semibold">
+                    <span className="text-[11px] sm:text-xs font-sans uppercase tracking-[0.25em] text-[#C86446] font-bold">
                       WHAT WE DO
                     </span>
                   </div>
 
-                  <h1 className="text-4xl sm:text-5xl md:text-[4rem] lg:text-[4.5rem] font-serif text-[#1A1412] font-normal leading-[1.15] tracking-tight font-['Cormorant_Garamond'] pt-2">
-                    Thoughtful spaces. <br />
+                  <h1 className="text-3xl sm:text-5xl md:text-[4rem] lg:text-[4.5rem] font-serif text-[#1A1412] font-medium leading-[1.2] sm:leading-[1.15] tracking-tight font-['Cormorant_Garamond'] pt-1 sm:pt-2">
+                    Thoughtful spaces. <br className="hidden xs:block" />
                     End-to-end solutions.
                   </h1>
 
-                  <p className="text-sm md:text-base text-[#6b6563] font-light leading-[1.8] max-w-[28rem] pt-3">
+                  <p className="text-sm md:text-base text-[#4A4442] font-normal leading-[1.7] max-w-[28rem] pt-2 sm:pt-3">
                     From concept to completion, we offer integrated services in architecture, interiors, construction and design-build. <br className="hidden sm:block" />
                     Every project is crafted with purpose, precision and passion.
                   </p>
