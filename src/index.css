@@ -157,4 +157,22 @@
       /* Offset for desktop navbar */
     }
   }
+
+  /* Mobile Media Query Rules (max-width: 768px & hover: none) */
+  @media (max-width: 768px), (hover: none) {
+    /* Automatic full-color for mobile touch devices without needing hover */
+    .zikzak-gallery-img,
+    img.grayscale,
+    .grayscale {
+      filter: grayscale(0%) !important;
+    }
+
+    /* Hero Slider Title mobile fluid scaling & alignment */
+    .hero-slider-title {
+      font-size: clamp(1.5rem, 6vw, 2.75rem) !important;
+      line-height: 1.15 !important;
+      word-break: break-word !important;
+      max-width: calc(100vw - 80px) !important;
+    }
+  }
 }
