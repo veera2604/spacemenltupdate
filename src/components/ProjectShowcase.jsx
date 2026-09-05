@@ -74,34 +74,6 @@ export default function ProjectShowcase({ limit }) {
     rightCol = sliced.filter((_, idx) => idx % 2 !== 0);
   }
 
-  const getAspectClass = (project) => {
-    switch (project.id) {
-      case 'greenframe':
-        return 'aspect-[16/10]';
-      case 'suganthi':
-        return 'aspect-[3/4]';
-      case 'rajesh':
-        return 'aspect-[3/4]';
-      case 'ravi':
-        return 'aspect-[3/4]';
-      case 'kandhasamy':
-        return 'aspect-[3/4]';
-      case 'rakesh':
-        return 'aspect-[16/10]';
-      case 'suriya':
-        return 'aspect-[16/10]';
-      case 'arunkumar':
-        return 'aspect-[3/4]';
-      case 'aravind':
-        return 'aspect-[3/4]';
-      case 'mangalam':
-        return 'aspect-[16/9]';
-      case 'venky':
-        return 'aspect-[16/10]';
-      default:
-        return 'aspect-[4/3]';
-    }
-  };
 
   const getArea = (project) => {
     const area = project.specs?.builtUpArea || '5280 SQ.FT';
@@ -136,7 +108,7 @@ export default function ProjectShowcase({ limit }) {
     </div>
   );
 
-  const ProjectCard = ({ project, aspectClass }) => (
+  const ProjectCard = ({ project }) => (
     <motion.div
       initial={{ opacity: 0, y: 35 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -145,14 +117,16 @@ export default function ProjectShowcase({ limit }) {
       className="group flex flex-col w-full cursor-pointer"
       onClick={() => navigate(`/project/${project.id}`)}
     >
-      {/* 1. Image Container */}
-      <div className={`w-full ${aspectClass} overflow-hidden bg-[#1a1918] relative rounded-none shadow-sm`}>
+      {/* 1. Image Container showing 100% FULL UNCROPPED view of every project image */}
+      <div className="w-full relative overflow-hidden bg-[#1a1918] rounded-none shadow-sm">
+        {/* Base B&W / Partial Image establishing natural image aspect ratio */}
         <img
           src={project.partialImage || project.heroImage}
           alt={`${project.title} partial color`}
-          className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out opacity-0 md:opacity-100 md:group-hover:opacity-0 group-hover:scale-[1.03]"
+          className="w-full h-auto block transition-all duration-700 ease-out opacity-0 md:opacity-100 md:group-hover:opacity-0 group-hover:scale-[1.03]"
           loading="lazy"
         />
+        {/* Color Hero Image overlay filling exact natural container height */}
         <img
           src={project.heroImage}
           alt={project.title}
@@ -210,7 +184,6 @@ export default function ProjectShowcase({ limit }) {
               <ProjectCard
                 key={project.id}
                 project={project}
-                aspectClass={getAspectClass(project)}
               />
             ))}
           </div>
@@ -221,7 +194,6 @@ export default function ProjectShowcase({ limit }) {
               <ProjectCard
                 key={project.id}
                 project={project}
-                aspectClass={getAspectClass(project)}
               />
             ))}
           </div>
