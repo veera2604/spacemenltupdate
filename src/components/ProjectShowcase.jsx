@@ -14,6 +14,27 @@ const filterCategories = [
 export default function ProjectShowcase({ limit }) {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [showFilter, setShowFilter] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Auto-hide filter bar when not scrolling; pop up on scroll up or down
+  React.useEffect(() => {
+    let timeoutId = null;
+
+    const handleScroll = () => {
+      setShowFilter(true);
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setShowFilter(false);
+      }, 2000);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, []);
 
   // Exact 11-project staggered column distribution matching Netlify website:
   // LEFT COLUMN (6 projects):
@@ -188,8 +209,18 @@ export default function ProjectShowcase({ limit }) {
         </motion.div>
       </div>
 
-      {/* FLOATING BOTTOM-CENTER FILTER PILL BAR */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#1A1412]/95 backdrop-blur-md text-white px-2 py-2 rounded-full shadow-[0_15px_35px_rgba(0,0,0,0.4)] border border-white/15 flex items-center gap-1 sm:gap-1.5">
+      {/* FLOATING BOTTOM-CENTER FILTER PILL BAR - POPS UP ONLY WHEN SCROLLING */}
+      <motion.div
+        initial={{ y: 90, opacity: 0 }}
+        animate={{
+          y: showFilter || isHovered ? 0 : 90,
+          opacity: showFilter || isHovered ? 1 : 0,
+        }}
+        transition={{ duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#1A1412]/95 backdrop-blur-md text-white px-2 py-2 rounded-full shadow-[0_15px_35px_rgba(0,0,0,0.4)] border border-white/15 flex items-center gap-1 sm:gap-1.5 pointer-events-auto"
+      >
         {filterCategories.map((cat) => {
           const isActive = selectedCategory === cat.key;
           return (
@@ -209,7 +240,7 @@ export default function ProjectShowcase({ limit }) {
             </button>
           );
         })}
-      </div>
+      </motion.div>
     </section>
   );
 }
