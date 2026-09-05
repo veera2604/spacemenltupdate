@@ -50,7 +50,7 @@ export default function Footer() {
               </button>
             </div>
 
-            <p className="text-[10px] sm:text-[11px] font-sans uppercase tracking-[0.14em] text-[#1A1412] whitespace-nowrap">
+            <p className="text-[10px] sm:text-[11px] font-sans uppercase tracking-[0.14em] text-[#1A1412] break-words sm:whitespace-nowrap">
               © {new Date().getFullYear()} SPACEMELD ARCHITECTS PRIVATE LIMITED. ALL RIGHTS RESERVED.
             </p>
           </div>

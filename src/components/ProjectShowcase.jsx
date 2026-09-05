@@ -219,7 +219,7 @@ export default function ProjectShowcase({ limit }) {
         transition={{ duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#1A1412]/95 backdrop-blur-md text-white px-2 py-2 rounded-full shadow-[0_15px_35px_rgba(0,0,0,0.4)] border border-white/15 flex items-center gap-1 sm:gap-1.5 pointer-events-auto"
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#1A1412]/95 backdrop-blur-md text-white px-2.5 py-2 rounded-full shadow-[0_15px_35px_rgba(0,0,0,0.4)] border border-white/15 flex items-center gap-1 sm:gap-1.5 pointer-events-auto max-w-[94vw] sm:max-w-none overflow-x-auto scrollbar-none"
       >
         {filterCategories.map((cat) => {
           const isActive = selectedCategory === cat.key;

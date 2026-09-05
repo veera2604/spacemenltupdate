@@ -139,14 +139,14 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
           </motion.div>
         </div>
 
-        {/* RIGHT DARK CARD LAYER (Compact Size - Right Bottom Corner) */}
-        <div className="lg:col-start-9 lg:col-end-13 lg:row-start-1 flex flex-col justify-end items-end z-20">
+        {/* RIGHT DARK CARD LAYER (Compact Size - Mobile Responsive) */}
+        <div className="lg:col-start-9 lg:col-end-13 lg:row-start-1 flex flex-col justify-end items-stretch lg:items-end z-20">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-[#161412] text-[#F8F5F0] p-6 lg:p-7 xl:p-8 shadow-[-15px_-15px_40px_rgba(0,0,0,0.4)] border-l border-t border-white/5 rounded-none w-full max-w-[340px] xl:max-w-[380px]"
+            className="bg-[#161412] text-[#F8F5F0] p-6 lg:p-7 xl:p-8 shadow-[-15px_-15px_40px_rgba(0,0,0,0.4)] border-l border-t border-white/5 rounded-none w-full max-w-full lg:max-w-[340px] xl:max-w-[380px]"
           >
             <h3 className="font-['Cormorant_Garamond'] text-lg lg:text-[22px] xl:text-[24px] font-normal leading-[1.25] tracking-tight text-[#C86446]">
               Shared vision,<br />
