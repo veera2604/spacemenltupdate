@@ -377,10 +377,6 @@ export default function About({ showPeople = true, showProfileBanner = true, hid
               className="lg:col-span-6 flex flex-col justify-between p-6 sm:p-8 lg:p-10 xl:p-12 max-h-[50vh] xl:max-h-[54vh] my-auto bg-[#F8F5F0] rounded-[2px] relative border border-[#D8C5AE]/60 shadow-[0_15px_35px_rgba(0,0,0,0.06)]"
             >
               <div>
-                <span className="font-['Cormorant_Garamond'] text-5xl sm:text-6xl text-[#A66A2C]/30 leading-none block -mb-4 select-none font-normal">
-                  &ldquo;
-                </span>
-
                 <h3 className="font-['Cormorant_Garamond'] text-2xl sm:text-3xl md:text-[34px] font-normal text-[#111111] leading-[1.3] relative z-10 mb-6">
                   We're here to help you<br />
                   write yours—<br />
