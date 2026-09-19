@@ -166,7 +166,7 @@ export default function ProjectShowcase({ limit }) {
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-[#66605c] font-sans leading-relaxed">
-                Our diverse commercial designs unlock space potential and focus on meticulous detail development. We create comprehensive, tailored solutions for your interior design needs.
+                We create distinctive residential houses and interiors where thoughtful architecture meets refined design. Every space is carefully planned and detailed to deliver comfort, functionality, and a timeless expression of your lifestyle.
               </p>
             </div>
           </div>
@@ -226,8 +226,8 @@ export default function ProjectShowcase({ limit }) {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               className={`px-4 sm:px-5 py-2 rounded-full text-[11px] sm:text-xs font-mono tracking-wider uppercase whitespace-nowrap transition-all duration-300 cursor-pointer ${isActive
-                  ? 'bg-[#C86446] text-white font-bold shadow-md'
-                  : 'text-white/75 hover:text-white hover:bg-white/10 font-medium'
+                ? 'bg-[#C86446] text-white font-bold shadow-md'
+                : 'text-white/75 hover:text-white hover:bg-white/10 font-medium'
                 }`}
             >
               {cat.label}
