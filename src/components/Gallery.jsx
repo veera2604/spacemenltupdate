@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ZoomIn, X, Sparkles, Eye, Share2, Download } from 'lucide-react';
+import ScrollColorImage from './ScrollColorImage';
 
 const galleryItems = [
   { id: 'g1', title: 'Green Frame Cantilever Planter', category: 'Biophilic Structural Detail', image: '/APR/A_F.jpg (1).jpeg', aspect: 'col-span-1 row-span-2' },
@@ -72,10 +73,10 @@ export default function Gallery() {
                 className={`group relative rounded-3xl overflow-hidden glass-panel border border-gray-200 cursor-pointer shadow-xl hover:border-[#c48b57]/80 hover:shadow-[0_25px_50px_rgba(196,139,87,0.25)] transition-all duration-500 bg-gray-900 ${config.colSpan} ${config.height} ${config.stagger}`}
               >
                 {/* Image: Black & White by default, turns to full color on hover! */}
-                <img
+                <ScrollColorImage
                   src={item.image}
                   alt={item.title}
-                  className="w-full h-full object-cover object-center grayscale group-hover:grayscale-0 transition-all duration-700 ease-out filter brightness-95 group-hover:brightness-100"
+                  className="w-full h-full object-cover object-center filter brightness-95 group-hover:brightness-100 transition-all duration-700 ease-out"
                   loading="lazy"
                 />
 

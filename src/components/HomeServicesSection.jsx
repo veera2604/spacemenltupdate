@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
+import ScrollColorImage from './ScrollColorImage';
 
 const homeServicesData = [
   {
@@ -127,10 +128,10 @@ export default function HomeServicesSection() {
 
               {/* Image Box with Grayscale to Color Hover & Overlay Number */}
               <div className="w-full aspect-[16/10] xl:aspect-[16/9] overflow-hidden relative bg-gray-900 rounded-lg mb-4">
-                <img
+                <ScrollColorImage
                   src={service.image}
                   alt={service.title}
-                  className="w-full h-full object-cover grayscale-0 md:grayscale md:contrast-[1.1] md:brightness-[0.92] md:group-hover:grayscale-0 group-hover:contrast-100 group-hover:brightness-100 group-hover:scale-110 transition-all duration-700 ease-out"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 ease-out"
                 />
                 {/* Subtle Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" />

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import SmoothScroll from '../components/SmoothScroll';
+import ScrollColorImage from '../components/ScrollColorImage';
 import {
   ArrowRight,
   CheckCircle,
@@ -335,11 +336,10 @@ export default function ServicesPage() {
                   <div>
                     {/* Architectural Photograph with Inner Zoom & Grayscale Pop */}
                     <div className="w-full aspect-[16/11] rounded-xl overflow-hidden bg-gray-100 relative mb-5">
-                      <motion.img
-                        variants={imagePopVariants}
+                      <ScrollColorImage
                         src={svc.image}
                         alt={svc.title}
-                        className="w-full h-full object-cover grayscale contrast-[1.1] brightness-[0.92] group-hover:grayscale-0 group-hover:contrast-100 group-hover:brightness-100 group-hover:scale-110 transition-all duration-700 ease-out"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 ease-out"
                         loading="lazy"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
