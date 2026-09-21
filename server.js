@@ -102,7 +102,7 @@ const handleContactInquiry = async (req, res) => {
   saveInquiryToDB(inquiryRecord);
 
   try {
-    const senderEmail = process.env.SMTP_USER || 'veera4012@gmail.com';
+    const senderEmail = process.env.SMTP_USER || 'admin@spacemeldarchitects.com';
     const receiverEmail = process.env.RECEIVER_EMAIL || 'info@spacemeldarchitects.com';
 
     // Verify if Gmail App Password is configured
@@ -196,34 +196,46 @@ const handleContactInquiry = async (req, res) => {
       `,
     };
 
-    // Email 2: Customer Auto-Reply
+    // Email 2: Customer Auto-Reply (Optimized for inbox delivery)
     const customerMailOptions = {
       from: `"SpaceMeld Architects" <${senderEmail}>`,
+      replyTo: receiverEmail,
       to: inquiryRecord.email,
-      subject: `Thank you for contacting SpaceMeld Architects`,
-      text: `Hello ${inquiryRecord.name},\n\nThank you for contacting SpaceMeld Architects.\nWe have received your enquiry successfully.\nOur team will review your requirements and contact you shortly.\n\nRegards,\nSpaceMeld Architects`,
+      subject: `SpaceMeld Architects: Your Project Enquiry Received`,
+      text: `Hello ${inquiryRecord.name},\n\nThank you for reaching out to SpaceMeld Architects regarding your ${inquiryRecord.projectType} project.\n\nWe have received your enquiry safely. Our design team is reviewing your project requirements and will connect with you shortly.\n\nSummary of your submitted enquiry:\n- Project Type: ${inquiryRecord.projectType}\n- Location: ${inquiryRecord.projectLocation}\n- Built-up Area: ${inquiryRecord.builtUpArea}\n- Estimated Budget: ${inquiryRecord.budget}\n\nWarm regards,\nSpaceMeld Architects\nBengaluru & Vellore Studios\nhttps://www.spacemeldarchitects.com`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 580px; margin: 0 auto; background: #f9f9f5; padding: 35px; border: 1px solid #e5e5e5; border-radius: 16px; color: #222222;">
-          <h2 style="color: #222222; text-transform: uppercase; letter-spacing: 2px; margin-top: 0; margin-bottom: 20px; font-size: 18px; border-bottom: 2px solid #c48b57; padding-bottom: 12px;">
+        <div style="font-family: Arial, sans-serif; max-width: 580px; margin: 0 auto; background: #ffffff; padding: 30px; border: 1px solid #e0e0e0; border-radius: 8px; color: #333333; line-height: 1.6;">
+          <h2 style="color: #1a1a1a; margin-top: 0; margin-bottom: 16px; font-size: 20px; border-bottom: 2px solid #c48b57; padding-bottom: 8px;">
             SpaceMeld Architects
           </h2>
-          <p style="font-size: 16px; color: #222222; line-height: 1.6;">
+          <p style="font-size: 15px; margin-bottom: 12px;">
             Hello <strong>${inquiryRecord.name}</strong>,
           </p>
-          <p style="font-size: 15px; color: #444444; line-height: 1.6;">
-            Thank you for contacting SpaceMeld Architects. We have received your project inquiry successfully.
+          <p style="font-size: 14px; color: #444444; margin-bottom: 16px;">
+            Thank you for reaching out to SpaceMeld Architects regarding your <strong>${inquiryRecord.projectType}</strong> project. We have safely received your enquiry.
           </p>
-          <p style="font-size: 15px; color: #444444; line-height: 1.6;">
-            Our Team  will review your project brief and connect with you shortly.
+          <div style="background: #fdfbf7; padding: 14px 18px; border-radius: 6px; border-left: 4px solid #c48b57; margin-bottom: 20px; font-size: 13px; color: #555555;">
+            <p style="margin: 0 0 6px 0; font-weight: bold; color: #222222;">Enquiry Summary:</p>
+            <p style="margin: 2px 0;">• <strong>Project Type:</strong> ${inquiryRecord.projectType}</p>
+            <p style="margin: 2px 0;">• <strong>Location:</strong> ${inquiryRecord.projectLocation}</p>
+            <p style="margin: 2px 0;">• <strong>Built-up Area:</strong> ${inquiryRecord.builtUpArea}</p>
+            <p style="margin: 2px 0;">• <strong>Budget Range:</strong> ${inquiryRecord.budget}</p>
+          </div>
+          <p style="font-size: 14px; color: #444444; margin-bottom: 20px;">
+            Our architectural design team will review your brief and contact you shortly.
           </p>
-          <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 25px 0;" />
-          <p style="font-size: 14px; color: #666666; margin: 0;">
-            Regards,<br />
+          <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;" />
+          <p style="font-size: 12px; color: #777777; margin: 0;">
+            Warm regards,<br />
             <strong style="color: #222222;">SpaceMeld Architects</strong><br />
-            <span style="color: #888888; font-size: 13px;">Bengaluru • Vellore  www.spacemeldarchitects.com</span>
+            Bengaluru & Vellore Studios<br />
+            <a href="https://www.spacemeldarchitects.com" style="color: #c48b57; text-decoration: none;">www.spacemeldarchitects.com</a>
           </p>
         </div>
       `,
+      headers: {
+        'X-Mailer': 'SpaceMeld Architects',
+      },
     };
 
     const adminInfo = await transporter.sendMail(adminMailOptions);
@@ -258,7 +270,7 @@ app.post('/api/apply', upload.fields([{ name: 'resumeFile', maxCount: 1 }, { nam
   const submittedOn = new Date().toLocaleString('en-US');
 
   try {
-    const senderEmail = process.env.SMTP_USER || 'spacemeldarchitects@gmail.com';
+    const senderEmail = process.env.SMTP_USER || 'admin@spacemeldarchitects.com';
     const receiverEmail = process.env.RECEIVER_EMAIL || 'info@spacemeldarchitects.com';
     const transporter = createTransporter();
 
@@ -331,6 +343,7 @@ app.post('/api/apply', upload.fields([{ name: 'resumeFile', maxCount: 1 }, { nam
     // Email 2: Customer Auto-Reply
     const customerMailOptions = {
       from: `"SpaceMeld Architects" <${senderEmail}>`,
+      replyTo: receiverEmail,
       to: email,
       subject: `Application Received - ${role}`,
       html: `
@@ -381,5 +394,5 @@ app.get('/api/inquiries', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`SpaceMeld Architects Backend API listening on http://localhost:${PORT}`);
-  console.log(`POST /api/contact configured to send to: ${process.env.RECEIVER_EMAIL || 'S.veeramurugan1@gmail.com'}`);
+  console.log(`POST /api/contact configured to send to: ${process.env.RECEIVER_EMAIL || 'info@spacemeldarchitects.com'}`);
 });
