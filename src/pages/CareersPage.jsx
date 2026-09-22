@@ -114,7 +114,8 @@ export default function CareersPage() {
           });
         }, 2500);
       } else {
-        alert('There was a problem submitting your application. Please try again.');
+        const errorData = await response.json().catch(() => ({}));
+        alert(errorData.error || 'There was a problem submitting your application. Please try again.');
       }
     } catch (error) {
       console.error('Submission error:', error);
