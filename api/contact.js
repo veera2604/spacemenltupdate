@@ -18,7 +18,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
   }
 
-  const { name, email, phone, projectType, projectLocation, builtUpArea, budget, message } = req.body || {};
+  let body = req.body;
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body);
+    } catch {
+      // fallback
+    }
+  }
+
+  const { name, email, phone, projectType, projectLocation, builtUpArea, budget, message } = body || {};
 
   // Validate required fields
   if (!name || !name.trim() || !email || !email.trim() || !phone || !phone.trim() || !message || !message.trim()) {
@@ -53,19 +62,21 @@ export default async function handler(req, res) {
   };
 
   try {
+    const smtpHost = process.env.SMTP_HOST || 'smtp.zoho.in';
+    const smtpPort = parseInt(process.env.SMTP_PORT || '465', 10);
     const senderEmail = process.env.SMTP_USER || 'admin@spacemeldarchitects.com';
+    const smtpPass = process.env.SMTP_PASS || 'f0Jx5QZ38py8';
     const receiverEmail = process.env.RECEIVER_EMAIL || 'info@spacemeldarchitects.com';
     const domain = senderEmail.includes('@') ? senderEmail.split('@')[1] : 'spacemeldarchitects.com';
-    const port = parseInt(process.env.SMTP_PORT || '465', 10);
 
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.zoho.in',
-      port: port,
-      secure: port === 465,
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpPort === 465,
       name: domain,
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: senderEmail,
+        pass: smtpPass,
       },
     });
 
@@ -261,13 +272,33 @@ export default async function handler(req, res) {
 </html>`,
     };
 
-    const adminInfo = await transporter.sendMail(adminMailOptions);
-    const customerInfo = await transporter.sendMail(customerMailOptions);
+    const [adminResult, customerResult] = await Promise.allSettled([
+      transporter.sendMail(adminMailOptions),
+      transporter.sendMail(customerMailOptions),
+    ]);
+
+    if (adminResult.status === 'rejected') {
+      console.error('Admin email dispatch error:', adminResult.reason);
+    } else {
+      console.log('Admin notification delivered:', adminResult.value?.messageId);
+    }
+
+    if (customerResult.status === 'rejected') {
+      console.error('Customer thank-you email dispatch error:', customerResult.reason);
+    } else {
+      console.log('Customer thank-you delivered:', customerResult.value?.messageId);
+    }
+
+    if (adminResult.status === 'rejected' && customerResult.status === 'rejected') {
+      throw new Error(adminResult.reason?.message || customerResult.reason?.message || 'Failed to dispatch emails');
+    }
 
     return res.status(200).json({
       success: true,
       inquiryId: inquiryRecord.id,
-      messageId: adminInfo.messageId,
+      adminDelivered: adminResult.status === 'fulfilled',
+      customerDelivered: customerResult.status === 'fulfilled',
+      customerMessageId: customerResult.status === 'fulfilled' ? customerResult.value?.messageId : null,
     });
   } catch (error) {
     console.error('Vercel API Contact Error:', error);

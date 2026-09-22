@@ -107,7 +107,16 @@ export default function Contact() {
           budget: formData.budget,
           message: formData.message,
         }),
-      }).catch(() => { });
+      }).then(async (res) => {
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          console.error('Contact API error:', result.error);
+        } else {
+          console.log('Inquiry submitted successfully:', result);
+        }
+      }).catch((err) => {
+        console.error('Contact fetch failed:', err);
+      });
 
     } catch (err) {
       console.error('Contact form submit error:', err);
