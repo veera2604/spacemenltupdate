@@ -49,21 +49,70 @@ export default function Contact() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
 
-    try {
-      if (isSubmitting) return false;
+    // Requirement 12: Prevent duplicate submissions while processing
+    if (isSubmitting) return false;
 
-      if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.message.trim()) {
-        setSubmissionError('Please complete all required fields (*).');
-        return false;
+    // Requirement 9: Proper validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.name.trim()) {
+      setSubmissionError('Please enter your full name.');
+      return false;
+    }
+    if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
+      setSubmissionError('Please enter a valid email address.');
+      return false;
+    }
+    if (!formData.phone.trim()) {
+      setSubmissionError('Please enter your phone number.');
+      return false;
+    }
+    if (!formData.projectType || !formData.projectType.trim()) {
+      setSubmissionError('Please select a project type.');
+      return false;
+    }
+    if (!formData.message.trim()) {
+      setSubmissionError('Please enter a project brief.');
+      return false;
+    }
+
+    setSubmissionError(null);
+    setIsSubmitting(true);
+
+    try {
+      // Send to backend API (works on Vercel production and local Vite proxy)
+      const contactEndpoint = import.meta.env.VITE_API_URL
+        ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api/contact`
+        : '/api/contact';
+
+      const response = await fetch(contactEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          projectType: formData.projectType.trim(),
+          projectLocation: (formData.projectLocation || '').trim(),
+          builtUpArea: formData.builtUpArea,
+          budget: formData.budget,
+          message: formData.message.trim(),
+        }),
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      // Requirement 10: Handle failure without false success
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Failed to submit enquiry. Please try again.');
       }
 
-      setSubmissionError(null);
+      // Requirement 11: Trigger success only after backend confirms email sent
       setIsSubmitted(true);
 
       confetti({
@@ -90,37 +139,11 @@ export default function Contact() {
         });
       }, 350);
 
-      // Send to backend API (works on Vercel production and local Vite proxy)
-      const contactEndpoint = import.meta.env.VITE_API_URL
-        ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api/contact`
-        : '/api/contact';
-      fetch(contactEndpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          projectType: formData.projectType,
-          projectLocation: formData.projectLocation,
-          builtUpArea: formData.builtUpArea,
-          budget: formData.budget,
-          message: formData.message,
-        }),
-      }).then(async (res) => {
-        const result = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          console.error('Contact API error:', result.error);
-        } else {
-          console.log('Inquiry submitted successfully:', result);
-        }
-      }).catch((err) => {
-        console.error('Contact fetch failed:', err);
-      });
-
     } catch (err) {
       console.error('Contact form submit error:', err);
-      setSubmissionError('Something went wrong sending your inquiry. Please try again.');
+      setSubmissionError(err.message || 'Something went wrong sending your inquiry. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
 
     return false;
@@ -513,7 +536,7 @@ export default function Contact() {
                   </h3>
 
                   <p className="text-sm text-gray-600 leading-relaxed font-normal mb-8">
-                    Your inquiry has been submitted successfully to <span className="font-bold text-[#1A1412]">info@spacemeldarchitects.com</span>. Our Team will contact you shortly.
+                    Thank you! Your enquiry has been submitted successfully. We will get back to you shortly.
                   </p>
 
                   <div className="flex flex-col sm:flex-row items-center gap-3">
