@@ -49,11 +49,15 @@ const saveInquiryToDB = (inquiry) => {
 
 // Create SMTP Transporter
 const createTransporter = () => {
-  const port = parseInt(process.env.SMTP_PORT || '587', 10);
+  const port = parseInt(process.env.SMTP_PORT || '465', 10);
+  const senderEmail = process.env.SMTP_USER || 'admin@spacemeldarchitects.com';
+  const domain = senderEmail.includes('@') ? senderEmail.split('@')[1] : 'spacemeldarchitects.com';
+
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    host: process.env.SMTP_HOST || 'smtp.zoho.in',
     port: port,
-    secure: port === 465, // true for 465, false for other ports (587 uses STARTTLS)
+    secure: port === 465, // true for 465, false for 587 (STARTTLS)
+    name: domain, // Set FQDN for SMTP EHLO/HELO to match authenticated domain
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
@@ -104,28 +108,13 @@ const handleContactInquiry = async (req, res) => {
   try {
     const senderEmail = process.env.SMTP_USER || 'admin@spacemeldarchitects.com';
     const receiverEmail = process.env.RECEIVER_EMAIL || 'info@spacemeldarchitects.com';
+    const domain = senderEmail.includes('@') ? senderEmail.split('@')[1] : 'spacemeldarchitects.com';
 
-    // Verify if Gmail App Password is configured
+    // Verify if credentials are placeholder
     if (!process.env.SMTP_PASS || process.env.SMTP_PASS === 'YOUR_APP_PASSWORD' || process.env.SMTP_PASS === 'your_smtp_app_password') {
       console.log('=== [REAL-TIME DISPATCH LOG - CREDENTIALS SIMULATION] ===');
-      console.log(`[EMAIL 1 - ADMIN NOTIFICATION]`);
-      console.log(`Subject: New Contact Form Submission - SpaceMeld Architects`);
-      console.log(`To: ${receiverEmail}`);
-      console.log(`From: ${senderEmail}`);
-      console.log('--- Email Content ---');
-      console.log(`Full Name: ${inquiryRecord.name}`);
-      console.log(`Email: ${inquiryRecord.email}`);
-      console.log(`Phone: ${inquiryRecord.phone}`);
-      console.log(`Project Type: ${inquiryRecord.projectType}`);
-      console.log(`Project Location: ${inquiryRecord.projectLocation}`);
-      console.log(`Built-up Area: ${inquiryRecord.builtUpArea}`);
-      console.log(`Estimated Budget: ${inquiryRecord.budget}`);
-      console.log(`Project Brief: ${inquiryRecord.message}`);
-      console.log('-----------------------------------------------------------');
-      console.log(`[EMAIL 2 - CUSTOMER AUTO-REPLY]`);
-      console.log(`Subject: Thank you for contacting SpaceMeld Architects`);
-      console.log(`To: ${inquiryRecord.email}`);
-      console.log(`From: ${senderEmail}`);
+      console.log(`[EMAIL 1 - ADMIN NOTIFICATION] To: ${receiverEmail}`);
+      console.log(`[EMAIL 2 - CUSTOMER AUTO-REPLY] To: ${inquiryRecord.email}`);
       console.log('===========================================================');
 
       return res.status(200).json({
@@ -138,111 +127,204 @@ const handleContactInquiry = async (req, res) => {
 
     const transporter = createTransporter();
 
-    // Email 1: Admin Notification
+    // Unique Message-IDs matching the authenticated domain
+    const adminMessageId = `<inq-admin-${Date.now()}-${Math.random().toString(36).substring(2, 9)}@${domain}>`;
+    const customerMessageId = `<inq-ack-${Date.now()}-${Math.random().toString(36).substring(2, 9)}@${domain}>`;
+
+    // Email 1: Admin / Client Notification (Sent to info@spacemeldarchitects.com)
     const adminMailOptions = {
       from: `"SpaceMeld Architects" <${senderEmail}>`,
       replyTo: inquiryRecord.email,
       to: receiverEmail,
-      subject: `New Project Inquiry from ${inquiryRecord.name} - SpaceMeld Architects`,
-      text: `New Contact Form Submission\n\nFull Name: ${inquiryRecord.name}\nEmail: ${inquiryRecord.email}\nPhone: ${inquiryRecord.phone}\nProject Type: ${inquiryRecord.projectType}\nLocation: ${inquiryRecord.projectLocation}\nBuilt-up Area: ${inquiryRecord.builtUpArea}\nEstimated Budget: ${inquiryRecord.budget}\n\nProject Brief:\n${inquiryRecord.message}\n\nSubmitted On: ${inquiryRecord.submittedOn}\nUser IP: ${inquiryRecord.ipAddress}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; background: #f9f9f5; padding: 35px; border: 1px solid #e5e5e5; border-radius: 16px; color: #222222;">
-          <h2 style="color: #222222; text-transform: uppercase; letter-spacing: 2px; margin-top: 0; margin-bottom: 25px; font-size: 20px; border-bottom: 2px solid #c48b57; padding-bottom: 12px;">
-            New Project Inquiry
-          </h2>
+      subject: `New Project Enquiry: ${inquiryRecord.name} (${inquiryRecord.projectType})`,
+      messageId: adminMessageId,
+      headers: {
+        'Auto-Submitted': 'auto-generated',
+        'X-Auto-Response-Suppress': 'All',
+      },
+      text: `SpaceMeld Architects - New Project Enquiry\n\nFull Name: ${inquiryRecord.name}\nEmail: ${inquiryRecord.email}\nPhone: ${inquiryRecord.phone}\nProject Type: ${inquiryRecord.projectType}\nLocation: ${inquiryRecord.projectLocation}\nBuilt-up Area: ${inquiryRecord.builtUpArea}\nEstimated Budget: ${inquiryRecord.budget}\n\nProject Brief:\n${inquiryRecord.message}\n\nSubmitted On: ${inquiryRecord.submittedOn}\nIP: ${inquiryRecord.ipAddress}`,
+      html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Project Enquiry</title>
+</head>
+<body style="margin: 0; padding: 20px; background-color: #f4f4f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #222222;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" style="max-width: 600px; background: #ffffff; border-radius: 12px; border: 1px solid #e0ded9; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+          <tr>
+            <td style="background: #1A1412; padding: 24px 30px; text-align: left;">
+              <h1 style="margin: 0; font-size: 20px; font-weight: 600; color: #ffffff; letter-spacing: 1px; text-transform: uppercase;">
+                SpaceMeld Architects
+              </h1>
+              <p style="margin: 4px 0 0 0; color: #c48b57; font-size: 13px; letter-spacing: 0.5px;">
+                New Website Lead / Project Enquiry
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 30px;">
+              <table role="presentation" width="100%" style="border-collapse: collapse; margin-bottom: 24px;">
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777; font-size: 14px; width: 38%;">Client Name</td>
+                  <td style="padding: 12px 0; color: #111111; font-size: 15px; font-weight: 600;">${inquiryRecord.name}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777; font-size: 14px;">Email</td>
+                  <td style="padding: 12px 0; font-size: 15px;"><a href="mailto:${inquiryRecord.email}" style="color: #c48b57; font-weight: 600; text-decoration: none;">${inquiryRecord.email}</a></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777; font-size: 14px;">Phone</td>
+                  <td style="padding: 12px 0; font-size: 15px;"><a href="tel:${inquiryRecord.phone}" style="color: #111111; font-weight: 600; text-decoration: none;">${inquiryRecord.phone}</a></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777; font-size: 14px;">Project Type</td>
+                  <td style="padding: 12px 0; color: #111111; font-size: 15px; font-weight: 600;">${inquiryRecord.projectType}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777; font-size: 14px;">Location</td>
+                  <td style="padding: 12px 0; color: #111111; font-size: 15px;">${inquiryRecord.projectLocation}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777; font-size: 14px;">Built-up Area</td>
+                  <td style="padding: 12px 0; color: #111111; font-size: 15px;">${inquiryRecord.builtUpArea}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777; font-size: 14px;">Estimated Budget</td>
+                  <td style="padding: 12px 0; color: #c48b57; font-size: 15px; font-weight: 600;">${inquiryRecord.budget}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; color: #777777; font-size: 13px;">Submitted On</td>
+                  <td style="padding: 12px 0; color: #555555; font-size: 13px;">${inquiryRecord.submittedOn}</td>
+                </tr>
+              </table>
 
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e0e0e0;">
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666; width: 38%;">Full Name:</td>
-              <td style="padding: 14px 18px; color: #222222; font-weight: bold; font-size: 15px;">${inquiryRecord.name}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Email Address:</td>
-              <td style="padding: 14px 18px;"><a href="mailto:${inquiryRecord.email}" style="color: #c48b57; font-weight: bold; text-decoration: none;">${inquiryRecord.email}</a></td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Phone Number:</td>
-              <td style="padding: 14px 18px; color: #222222; font-weight: bold;"><a href="tel:${inquiryRecord.phone}" style="color: #222222; text-decoration: none;">${inquiryRecord.phone}</a></td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Project Type:</td>
-              <td style="padding: 14px 18px; color: #222222; font-weight: bold;">${inquiryRecord.projectType}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Project Location:</td>
-              <td style="padding: 14px 18px; color: #222222;">${inquiryRecord.projectLocation}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Approx. Built-up Area:</td>
-              <td style="padding: 14px 18px; color: #222222;">${inquiryRecord.builtUpArea}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Estimated Budget:</td>
-              <td style="padding: 14px 18px; color: #c48b57; font-weight: bold;">${inquiryRecord.budget}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Submitted On:</td>
-              <td style="padding: 14px 18px; color: #444444;">${inquiryRecord.submittedOn}</td>
-            </tr>
-          </table>
+              <div style="background: #faf9f6; border-left: 4px solid #c48b57; padding: 18px 20px; border-radius: 4px; margin-bottom: 24px;">
+                <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 700; color: #777777; text-transform: uppercase; letter-spacing: 0.5px;">
+                  Project Brief &amp; Requirements
+                </p>
+                <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #222222; white-space: pre-wrap;">${inquiryRecord.message}</p>
+              </div>
 
-          <div style="background: #ffffff; padding: 22px; border-radius: 12px; border: 1px solid #e0e0e0;">
-            <p style="margin: 0 0 10px 0; font-weight: bold; color: #666666; text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">
-              Project Brief / Requirements:
-            </p>
-            <p style="margin: 0; color: #222222; line-height: 1.7; font-size: 15px; white-space: pre-wrap;">${inquiryRecord.message}</p>
-          </div>
-        </div>
-      `,
+              <p style="margin: 0; font-size: 13px; color: #888888; text-align: center;">
+                Click "Reply" to email ${inquiryRecord.name} directly at ${inquiryRecord.email}.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
     };
 
-    // Email 2: Customer Auto-Reply (Optimized for inbox delivery)
+    // Email 2: Customer Thank-You Response (Sent to inquiryRecord.email e.g. boysg7659@gmail.com)
     const customerMailOptions = {
       from: `"SpaceMeld Architects" <${senderEmail}>`,
       replyTo: receiverEmail,
       to: inquiryRecord.email,
-      subject: `SpaceMeld Architects: Your Project Enquiry Received`,
-      text: `Hello ${inquiryRecord.name},\n\nThank you for reaching out to SpaceMeld Architects regarding your ${inquiryRecord.projectType} project.\n\nWe have received your enquiry safely. Our design team is reviewing your project requirements and will connect with you shortly.\n\nSummary of your submitted enquiry:\n- Project Type: ${inquiryRecord.projectType}\n- Location: ${inquiryRecord.projectLocation}\n- Built-up Area: ${inquiryRecord.builtUpArea}\n- Estimated Budget: ${inquiryRecord.budget}\n\nWarm regards,\nSpaceMeld Architects\nBengaluru & Vellore Studios\nhttps://www.spacemeldarchitects.com`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 580px; margin: 0 auto; background: #ffffff; padding: 30px; border: 1px solid #e0e0e0; border-radius: 8px; color: #333333; line-height: 1.6;">
-          <h2 style="color: #1a1a1a; margin-top: 0; margin-bottom: 16px; font-size: 20px; border-bottom: 2px solid #c48b57; padding-bottom: 8px;">
-            SpaceMeld Architects
-          </h2>
-          <p style="font-size: 15px; margin-bottom: 12px;">
-            Hello <strong>${inquiryRecord.name}</strong>,
-          </p>
-          <p style="font-size: 14px; color: #444444; margin-bottom: 16px;">
-            Thank you for reaching out to SpaceMeld Architects regarding your <strong>${inquiryRecord.projectType}</strong> project. We have safely received your enquiry.
-          </p>
-          <div style="background: #fdfbf7; padding: 14px 18px; border-radius: 6px; border-left: 4px solid #c48b57; margin-bottom: 20px; font-size: 13px; color: #555555;">
-            <p style="margin: 0 0 6px 0; font-weight: bold; color: #222222;">Enquiry Summary:</p>
-            <p style="margin: 2px 0;">• <strong>Project Type:</strong> ${inquiryRecord.projectType}</p>
-            <p style="margin: 2px 0;">• <strong>Location:</strong> ${inquiryRecord.projectLocation}</p>
-            <p style="margin: 2px 0;">• <strong>Built-up Area:</strong> ${inquiryRecord.builtUpArea}</p>
-            <p style="margin: 2px 0;">• <strong>Budget Range:</strong> ${inquiryRecord.budget}</p>
-          </div>
-          <p style="font-size: 14px; color: #444444; margin-bottom: 20px;">
-            Our architectural design team will review your brief and contact you shortly.
-          </p>
-          <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;" />
-          <p style="font-size: 12px; color: #777777; margin: 0;">
-            Warm regards,<br />
-            <strong style="color: #222222;">SpaceMeld Architects</strong><br />
-            Bengaluru & Vellore Studios<br />
-            <a href="https://www.spacemeldarchitects.com" style="color: #c48b57; text-decoration: none;">www.spacemeldarchitects.com</a>
-          </p>
-        </div>
-      `,
+      subject: `Thank you for contacting SpaceMeld Architects`,
+      messageId: customerMessageId,
       headers: {
-        'X-Mailer': 'SpaceMeld Architects',
+        'Auto-Submitted': 'auto-generated',
+        'X-Auto-Response-Suppress': 'All',
+        'List-Unsubscribe': `<mailto:${receiverEmail}?subject=Unsubscribe>`,
       },
+      text: `Dear ${inquiryRecord.name},\n\nThank you for reaching out to SpaceMeld Architects regarding your ${inquiryRecord.projectType} project.\n\nWe have received your enquiry safely. Our architectural design team is reviewing your project details and will connect with you shortly.\n\nSummary of your enquiry:\n- Project Type: ${inquiryRecord.projectType}\n- Location: ${inquiryRecord.projectLocation}\n- Built-up Area: ${inquiryRecord.builtUpArea}\n- Budget Range: ${inquiryRecord.budget}\n\nIf you have any immediate questions or architectural drawings to share, feel free to reply directly to this email or reach us at ${receiverEmail}.\n\nWarm regards,\nSpaceMeld Architects\nBengaluru Studio: 19th Main Road, HSR Layout, Bengaluru - 560102\nVellore Studio: Jamalpuram Road, Vellore - 632002\nPhone: +91 80955 00050\nWebsite: https://www.spacemeldarchitects.com`,
+      html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You - SpaceMeld Architects</title>
+</head>
+<body style="margin: 0; padding: 20px; background-color: #f7f6f2; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #222222; -webkit-font-smoothing: antialiased;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" style="max-width: 580px; background: #ffffff; border-radius: 10px; border: 1px solid #e5e3dd; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+          <tr>
+            <td style="background-color: #1A1412; padding: 28px 32px; text-align: left; border-bottom: 3px solid #c48b57;">
+              <h1 style="margin: 0; font-size: 20px; font-weight: 600; color: #ffffff; letter-spacing: 1.5px; text-transform: uppercase;">
+                SpaceMeld Architects
+              </h1>
+              <p style="margin: 6px 0 0 0; color: #d4a373; font-size: 12px; letter-spacing: 0.5px;">
+                Architecture • Interior • Spatial Design
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 32px;">
+              <p style="font-size: 16px; margin: 0 0 16px 0; color: #111111;">
+                Hello <strong>${inquiryRecord.name}</strong>,
+              </p>
+              <p style="font-size: 14px; line-height: 1.7; color: #444444; margin: 0 0 20px 0;">
+                Thank you for reaching out to <strong>SpaceMeld Architects</strong> regarding your <strong>${inquiryRecord.projectType}</strong> project. We have successfully received your enquiry.
+              </p>
+
+              <div style="background-color: #faf8f5; border: 1px solid #eee8df; border-left: 4px solid #c48b57; border-radius: 6px; padding: 16px 20px; margin-bottom: 24px;">
+                <p style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; color: #222222; text-transform: uppercase; letter-spacing: 0.5px;">
+                  Enquiry Details:
+                </p>
+                <table role="presentation" width="100%" style="border-collapse: collapse; font-size: 14px;">
+                  <tr>
+                    <td style="padding: 4px 0; color: #777777; width: 40%;">Project Type:</td>
+                    <td style="padding: 4px 0; color: #111111; font-weight: 600;">${inquiryRecord.projectType}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0; color: #777777;">Location:</td>
+                    <td style="padding: 4px 0; color: #111111;">${inquiryRecord.projectLocation}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0; color: #777777;">Built-up Area:</td>
+                    <td style="padding: 4px 0; color: #111111;">${inquiryRecord.builtUpArea}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0; color: #777777;">Budget Range:</td>
+                    <td style="padding: 4px 0; color: #c48b57; font-weight: 600;">${inquiryRecord.budget}</td>
+                  </tr>
+                </table>
+              </div>
+
+              <p style="font-size: 14px; line-height: 1.7; color: #444444; margin: 0 0 24px 0;">
+                Our principal architectural team is reviewing your project brief and will get in touch with you shortly to schedule an initial consultation.
+              </p>
+
+              <hr style="border: none; border-top: 1px solid #eeeeee; margin: 24px 0;" />
+
+              <table role="presentation" width="100%" style="border-collapse: collapse;">
+                <tr>
+                  <td>
+                    <p style="font-size: 13px; line-height: 1.6; color: #666666; margin: 0;">
+                      <strong style="color: #111111;">SpaceMeld Architects</strong><br />
+                      <strong>Bengaluru:</strong> 19th Main Road, HSR Layout, Bengaluru – 560 102<br />
+                      <strong>Vellore:</strong> Jamalpuram Road, Vellore – 632 002<br />
+                      Phone: <a href="tel:+918095500050" style="color: #c48b57; text-decoration: none;">+91 80955 00050</a><br />
+                      Email: <a href="mailto:${receiverEmail}" style="color: #c48b57; text-decoration: none;">${receiverEmail}</a><br />
+                      Web: <a href="https://www.spacemeldarchitects.com" style="color: #c48b57; text-decoration: none;">www.spacemeldarchitects.com</a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
     };
 
     const adminInfo = await transporter.sendMail(adminMailOptions);
     console.log('Admin notification email delivered to %s successfully: %s', receiverEmail, adminInfo.messageId);
 
     const customerInfo = await transporter.sendMail(customerMailOptions);
-    console.log('Customer auto-reply email delivered to %s successfully: %s', inquiryRecord.email, customerInfo.messageId);
+    console.log('Customer thank-you email delivered to %s successfully: %s', inquiryRecord.email, customerInfo.messageId);
 
     return res.status(200).json({
       success: true,
@@ -258,6 +340,7 @@ const handleContactInquiry = async (req, res) => {
   }
 };
 
+
 // POST /api/apply (Careers Application)
 app.post('/api/apply', upload.fields([{ name: 'resumeFile', maxCount: 1 }, { name: 'portfolioFile', maxCount: 1 }]), async (req, res) => {
   const { name, email, phone, experience, location, education, portfolioUrl, linkedin, message, role } = req.body;
@@ -272,6 +355,7 @@ app.post('/api/apply', upload.fields([{ name: 'resumeFile', maxCount: 1 }, { nam
   try {
     const senderEmail = process.env.SMTP_USER || 'admin@spacemeldarchitects.com';
     const receiverEmail = process.env.RECEIVER_EMAIL || 'info@spacemeldarchitects.com';
+    const domain = senderEmail.includes('@') ? senderEmail.split('@')[1] : 'spacemeldarchitects.com';
     const transporter = createTransporter();
 
     // Attachments mapping
@@ -283,90 +367,157 @@ app.post('/api/apply', upload.fields([{ name: 'resumeFile', maxCount: 1 }, { nam
       attachments.push({ filename: req.files.portfolioFile[0].originalname, content: req.files.portfolioFile[0].buffer });
     }
 
+    const adminMessageId = `<career-admin-${Date.now()}-${Math.random().toString(36).substring(2, 9)}@${domain}>`;
+    const customerMessageId = `<career-ack-${Date.now()}-${Math.random().toString(36).substring(2, 9)}@${domain}>`;
+
     // Email 1: Admin Notification
     const adminMailOptions = {
-      from: `"SpaceMeld Architects Careers" <${senderEmail}>`,
+      from: `"SpaceMeld Careers" <${senderEmail}>`,
       replyTo: email,
       to: receiverEmail,
       subject: `New Job Application: ${name} - ${role}`,
+      messageId: adminMessageId,
+      headers: {
+        'Auto-Submitted': 'auto-generated',
+        'X-Auto-Response-Suppress': 'All',
+      },
+      text: `SpaceMeld Architects - New Career Application\n\nRole Applied: ${role}\nApplicant Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nExperience: ${experience || 'N/A'}\nLocation: ${location || 'N/A'}\nEducation: ${education || 'N/A'}\nPortfolio: ${portfolioUrl || 'N/A'}\nLinkedIn: ${linkedin || 'N/A'}\n\nMessage:\n${message || 'None'}\n\nSubmitted On: ${submittedOn}\nIP: ${clientIP}`,
       attachments,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; background: #f9f9f5; padding: 35px; border: 1px solid #e5e5e5; border-radius: 16px; color: #222222;">
-          <h2 style="color: #222222; text-transform: uppercase; letter-spacing: 2px; margin-top: 0; margin-bottom: 25px; font-size: 20px; border-bottom: 2px solid #c48b57; padding-bottom: 12px;">
-            New Career Application: ${role}
-          </h2>
-          <table style="width: 100%; border-collapse: collapse; font-size: 14px; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e0e0e0; margin-bottom: 25px;">
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666; width: 38%;">Full Name:</td>
-              <td style="padding: 14px 18px; color: #222222; font-weight: bold; font-size: 15px;">${name}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Email Address:</td>
-              <td style="padding: 14px 18px;"><a href="mailto:${email}" style="color: #c48b57; font-weight: bold; text-decoration: none;">${email}</a></td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Phone Number:</td>
-              <td style="padding: 14px 18px; color: #222222; font-weight: bold;"><a href="tel:${phone}" style="color: #222222; text-decoration: none;">${phone}</a></td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Experience (Yrs):</td>
-              <td style="padding: 14px 18px; color: #222222;">${experience || 'N/A'}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Location:</td>
-              <td style="padding: 14px 18px; color: #222222;">${location || 'N/A'}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Education:</td>
-              <td style="padding: 14px 18px; color: #222222;">${education || 'N/A'}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">Portfolio URL:</td>
-              <td style="padding: 14px 18px; color: #c48b57;">${portfolioUrl ? '<a href="' + portfolioUrl + '">' + portfolioUrl + '</a>' : 'Not provided'}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eeeeee;">
-              <td style="padding: 14px 18px; font-weight: bold; color: #666666;">LinkedIn Profile:</td>
-              <td style="padding: 14px 18px; color: #222222;">${linkedin ? '<a href="' + linkedin + '">' + linkedin + '</a>' : 'Not provided'}</td>
-            </tr>
-          </table>
+      html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Job Application</title>
+</head>
+<body style="margin: 0; padding: 20px; background: #f4f4f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #222222;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" style="max-width: 620px; background: #ffffff; border-radius: 12px; border: 1px solid #e0ded9; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+          <tr>
+            <td style="background: #1A1412; padding: 24px 30px; text-align: left;">
+              <h1 style="margin: 0; font-size: 20px; font-weight: 600; color: #ffffff; letter-spacing: 1px; text-transform: uppercase;">
+                SpaceMeld Architects
+              </h1>
+              <p style="margin: 4px 0 0 0; color: #c48b57; font-size: 13px;">
+                New Career Application: ${role}
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 30px;">
+              <table role="presentation" width="100%" style="border-collapse: collapse; font-size: 14px; margin-bottom: 24px;">
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777; width: 38%;">Candidate Name</td>
+                  <td style="padding: 12px 0; color: #111111; font-weight: 600;">${name}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777;">Email Address</td>
+                  <td style="padding: 12px 0;"><a href="mailto:${email}" style="color: #c48b57; font-weight: 600; text-decoration: none;">${email}</a></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777;">Phone</td>
+                  <td style="padding: 12px 0;"><a href="tel:${phone}" style="color: #111111; font-weight: 600; text-decoration: none;">${phone}</a></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777;">Experience</td>
+                  <td style="padding: 12px 0; color: #111111;">${experience || 'N/A'}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777;">Location</td>
+                  <td style="padding: 12px 0; color: #111111;">${location || 'N/A'}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777;">Education</td>
+                  <td style="padding: 12px 0; color: #111111;">${education || 'N/A'}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777;">Portfolio URL</td>
+                  <td style="padding: 12px 0;">${portfolioUrl ? '<a href="' + portfolioUrl + '" style="color: #c48b57;">' + portfolioUrl + '</a>' : 'Not provided'}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eeeeee;">
+                  <td style="padding: 12px 0; color: #777777;">LinkedIn Profile</td>
+                  <td style="padding: 12px 0;">${linkedin ? '<a href="' + linkedin + '" style="color: #c48b57;">' + linkedin + '</a>' : 'Not provided'}</td>
+                </tr>
+              </table>
 
-          <div style="background: #ffffff; padding: 22px; border-radius: 12px; border: 1px solid #e0e0e0;">
-            <p style="margin: 0 0 10px 0; font-weight: bold; color: #666666; text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">
-              Additional Information:
-            </p>
-            <p style="margin: 0; color: #222222; line-height: 1.7; font-size: 15px; white-space: pre-wrap;">${message || 'None'}</p>
-          </div>
-        </div>
-      `,
+              <div style="background: #faf9f6; border-left: 4px solid #c48b57; padding: 18px 20px; border-radius: 4px;">
+                <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 700; color: #777777; text-transform: uppercase;">
+                  Additional Message
+                </p>
+                <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #222222; white-space: pre-wrap;">${message || 'None'}</p>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
     };
 
-    // Email 2: Customer Auto-Reply
+    // Email 2: Candidate Confirmation
     const customerMailOptions = {
       from: `"SpaceMeld Architects" <${senderEmail}>`,
       replyTo: receiverEmail,
       to: email,
-      subject: `Application Received - ${role}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 580px; margin: 0 auto; background: #f9f9f5; padding: 35px; border: 1px solid #e5e5e5; border-radius: 16px; color: #222222;">
-          <h2 style="color: #222222; text-transform: uppercase; letter-spacing: 2px; margin-top: 0; margin-bottom: 20px; font-size: 18px; border-bottom: 2px solid #c48b57; padding-bottom: 12px;">
-            SpaceMeld Architects
-          </h2>
-          <p style="font-size: 16px; color: #222222; line-height: 1.6;">
-            Hello <strong>${name}</strong>,
-          </p>
-          <p style="font-size: 15px; color: #444444; line-height: 1.6;">
-            Thank you for applying for the <strong>${role}</strong> position at SpaceMeld Architects. We have successfully received your application.
-          </p>
-          <p style="font-size: 15px; color: #444444; line-height: 1.6;">
-            Our team will review your credentials and reach out to you if your profile matches our requirements.
-          </p>
-          <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 25px 0;" />
-          <p style="font-size: 14px; color: #666666; margin: 0;">
-            Regards,<br />
-            <strong style="color: #222222;">SpaceMeld Architects</strong>
-          </p>
-        </div>
-      `,
+      subject: `Application Received: ${role} - SpaceMeld Architects`,
+      messageId: customerMessageId,
+      headers: {
+        'Auto-Submitted': 'auto-generated',
+        'X-Auto-Response-Suppress': 'All',
+        'List-Unsubscribe': `<mailto:${receiverEmail}?subject=Unsubscribe>`,
+      },
+      text: `Dear ${name},\n\nThank you for applying for the ${role} position at SpaceMeld Architects. We have received your application and materials safely.\n\nOur design leadership team reviews applications on a rolling basis. If your experience and portfolio align with our current studio requirements, we will reach out to you directly for an interview.\n\nWarm regards,\nSpaceMeld Architects Talent Team\nBengaluru & Vellore Studios\nhttps://www.spacemeldarchitects.com`,
+      html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Received</title>
+</head>
+<body style="margin: 0; padding: 20px; background-color: #f7f6f2; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #222222;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" style="max-width: 580px; background: #ffffff; border-radius: 10px; border: 1px solid #e5e3dd; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+          <tr>
+            <td style="background-color: #1A1412; padding: 28px 32px; text-align: left; border-bottom: 3px solid #c48b57;">
+              <h1 style="margin: 0; font-size: 20px; font-weight: 600; color: #ffffff; letter-spacing: 1.5px; text-transform: uppercase;">
+                SpaceMeld Architects
+              </h1>
+              <p style="margin: 6px 0 0 0; color: #d4a373; font-size: 12px;">
+                Careers &amp; Talent Acquisition
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 32px;">
+              <p style="font-size: 16px; margin: 0 0 16px 0; color: #111111;">
+                Hello <strong>${name}</strong>,
+              </p>
+              <p style="font-size: 14px; line-height: 1.7; color: #444444; margin: 0 0 16px 0;">
+                Thank you for applying for the <strong>${role}</strong> role at <strong>SpaceMeld Architects</strong>. We have received your application successfully.
+              </p>
+              <p style="font-size: 14px; line-height: 1.7; color: #444444; margin: 0 0 24px 0;">
+                Our studio leadership team will review your qualifications and portfolio. If your background matches our current openings, we will contact you directly to schedule an interview.
+              </p>
+              <hr style="border: none; border-top: 1px solid #eeeeee; margin: 24px 0;" />
+              <p style="font-size: 13px; line-height: 1.6; color: #666666; margin: 0;">
+                <strong style="color: #111111;">SpaceMeld Architects Talent Team</strong><br />
+                Bengaluru &amp; Vellore Studios<br />
+                <a href="https://www.spacemeldarchitects.com" style="color: #c48b57; text-decoration: none;">www.spacemeldarchitects.com</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
     };
 
     await transporter.sendMail(adminMailOptions);

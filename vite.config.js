@@ -9,6 +9,9 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
+    proxy: {
+      '/api': 'http://localhost:5001',
+    },
     watch: {
       ignored: ['**/inquiries.json', '**/server.js', '**/*.log'],
     },

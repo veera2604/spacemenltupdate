@@ -90,8 +90,11 @@ export default function Contact() {
         });
       }, 350);
 
-      // Send to backend API
-      fetch('http://localhost:5001/api/contact', {
+      // Send to backend API (works on Vercel production and local Vite proxy)
+      const contactEndpoint = import.meta.env.VITE_API_URL
+        ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api/contact`
+        : '/api/contact';
+      fetch(contactEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

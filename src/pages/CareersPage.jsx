@@ -94,7 +94,10 @@ export default function CareersPage() {
       });
       data.append('role', activeModalRole);
 
-      const response = await fetch('http://localhost:5001/api/apply', {
+      const applyEndpoint = import.meta.env.VITE_API_URL
+        ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api/apply`
+        : '/api/apply';
+      const response = await fetch(applyEndpoint, {
         method: 'POST',
         body: data,
       });
