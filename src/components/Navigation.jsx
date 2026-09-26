@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import logo from '../assets/spacemeld_gemini_logo.png';
+import logoWhite from '../assets/spacemeld_gemini_logo_white.png';
 
 const zikzakMenuItems = [
   { name: 'Our Story', href: '/about' },
@@ -75,9 +77,9 @@ export default function Navigation({ hideSpacer = false }) {
               aria-label="SpaceMELD Home"
             >
               <img
-                src="/Latest_LOGO SM title block_15-05-2026_222.png"
+                src={logo}
                 alt="SpaceMELD Architecture Studio Logo"
-                className={`w-auto object-contain transition-all duration-300 group-hover:scale-105 origin-left ${scrolled ? 'h-[30px] sm:h-[34px] md:h-[36px]' : 'h-[34px] sm:h-[40px] md:h-[42px]'
+                className={`w-auto object-contain transition-all duration-300 group-hover:scale-105 origin-left ${scrolled ? 'h-[28px] sm:h-[32px] md:h-[34px]' : 'h-[34px] sm:h-[38px] md:h-[42px]'
                   }`}
               />
             </a>
@@ -150,10 +152,9 @@ export default function Navigation({ hideSpacer = false }) {
                 className="cursor-pointer"
               >
                 <img
-                  src="/Latest_LOGO SM title block_15-05-2026_222.png"
+                  src={logoWhite}
                   alt="SpaceMELD Logo"
-                  style={{ clipPath: 'inset(4px)' }}
-                  className="h-12 md:h-16 w-auto object-contain brightness-0 invert"
+                  className="h-8 md:h-10 w-auto object-contain"
                 />
               </a>
 
