@@ -43,6 +43,12 @@ const employeesList = [
     imagePosition: 'object-center',
   },
   {
+    name: 'Subash',
+    role: 'SENIOR ARCHITECT',
+    image: '/TEAM/SUBASH.jpeg',
+    imagePosition: 'object-center',
+  },
+  {
     name: 'Raghuram',
     role: 'ARCHITECT & SENIOR PROJECT MANAGER',
     image: '/TEAM/RAGHU.jpeg',

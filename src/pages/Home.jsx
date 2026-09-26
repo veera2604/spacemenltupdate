@@ -101,15 +101,15 @@ export default function Home() {
                 onClick={handleGoToContact}
                 whileHover={{ scale: 1.06, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3.5 rounded-full bg-[#1A1412] text-white text-[10px] sm:text-xs font-mono uppercase tracking-[0.18em] sm:tracking-[0.22em] font-bold shadow-[0_15px_35px_rgba(0,0,0,0.4)] border border-[#c48b57]/60 hover:bg-[#c48b57] hover:text-[#1A1412] hover:border-[#1A1412] transition-all duration-300"
+                className="group relative flex items-center gap-2 sm:gap-2.5 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-full bg-[#1A1412] text-white text-[9px] sm:text-[11px] font-mono uppercase tracking-[0.16em] sm:tracking-[0.2em] font-bold shadow-[0_12px_30px_rgba(0,0,0,0.35)] border border-[#c48b57]/60 hover:bg-[#c48b57] hover:text-[#1A1412] hover:border-[#1A1412] transition-all duration-300"
               >
                 {/* Pulsing Gold Ring */}
                 <span className="absolute -inset-1 rounded-full bg-[#c48b57]/30 animate-ping pointer-events-none" />
 
-                <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#c48b57] group-hover:text-[#1A1412] transition-colors" />
+                <Mail className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#c48b57] group-hover:text-[#1A1412] transition-colors" />
                 <span>BUILD YOUR VISION</span>
-                <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-white/10 group-hover:bg-[#1A1412] text-white flex items-center justify-center transition-colors">
-                  <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <span className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full bg-white/10 group-hover:bg-[#1A1412] text-white flex items-center justify-center transition-colors">
+                  <ArrowUpRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </span>
               </motion.button>
             </motion.div>

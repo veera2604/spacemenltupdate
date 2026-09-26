@@ -52,6 +52,18 @@ const teamMembers = [
     ],
   },
   {
+    name: 'Subash',
+    role: 'Senior Architect',
+    crew: 'technical',
+    degree: 'Bachelor of Architecture',
+    image: '/TEAM/SUBASH.jpeg',
+    imagePosition: 'object-center',
+    bio: [
+      'Subash drives parametric modeling, advanced computational design, and structural integration across complex projects at SpaceMELD.',
+      'Bridging algorithmic design methodologies with practical site realities, he oversees technical documentation and precision execution to ensure design fidelity from model to built form.'
+    ],
+  },
+  {
     name: 'Raghuram',
     role: 'Architect & Senior Project Manager',
     crew: 'technical',

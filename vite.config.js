@@ -13,7 +13,7 @@ export default defineConfig({
       '/api': 'http://localhost:5001',
     },
     watch: {
-      ignored: ['**/inquiries.json', '**/server.js', '**/*.log'],
+      ignored: ['**/inquiries.json', '**/server.js', '**/*.log', '**/*.png', '**/*.jpg', '**/*.jpeg'],
     },
   },
 })

@@ -252,7 +252,7 @@ const handleContactInquiry = async (req, res) => {
                 SpaceMELD Architects
               </h1>
               <p style="margin: 6px 0 0 0; color: #d4a373; font-size: 12px; letter-spacing: 0.5px;">
-                Architecture • Interior • Spatial Design
+                Architecture • Interior • Construction
               </p>
             </td>
           </tr>
