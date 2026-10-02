@@ -55,20 +55,53 @@ export default function ProjectShowcase({ limit }) {
   const leftProjectIds = ['greenframe', 'rajesh', 'kandhasamy', 'suriya', 'aravind', 'mangalam'];
   const rightProjectIds = ['suganthi', 'venky', 'ravi', 'rakesh', 'arunkumar'];
 
+  const matchesCategory = (project, categoryKey) => {
+    if (!categoryKey || categoryKey === 'All') return true;
+    const cats = Array.isArray(project.categories)
+      ? project.categories
+      : [project.category].filter(Boolean);
+
+    const keyLower = categoryKey.toLowerCase();
+    const isInteriorKey = keyLower === 'interior' || keyLower === 'interiors';
+
+    return cats.some((cat) => {
+      const cLower = cat.toLowerCase();
+      if (cLower === keyLower) return true;
+      if (isInteriorKey && (cLower === 'interior' || cLower === 'interiors')) return true;
+      return false;
+    });
+  };
+
   let leftCol = [];
   let rightCol = [];
 
   if (selectedCategory === 'All') {
     leftCol = leftProjectIds.map((id) => projectsData.find((p) => p.id === id)).filter(Boolean);
     rightCol = rightProjectIds.map((id) => projectsData.find((p) => p.id === id)).filter(Boolean);
+  } else if (selectedCategory === 'Interior' || selectedCategory === 'Interiors') {
+    // Specifically curated order for Interiors: Shadow Box, The Louvered House, Framed House
+    const interiorOrder = ['rajesh', 'suganthi', 'rakesh'];
+    const matched = projectsData.filter((p) => matchesCategory(p, 'Interior'));
+    const filtered = matched.sort((a, b) => {
+      const idxA = interiorOrder.indexOf(a.id);
+      const idxB = interiorOrder.indexOf(b.id);
+      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+      if (idxA !== -1) return -1;
+      if (idxB !== -1) return 1;
+      return 0;
+    });
+    leftCol = filtered.filter((_, idx) => idx % 2 === 0);
+    rightCol = filtered.filter((_, idx) => idx % 2 !== 0);
   } else {
-    const filtered = projectsData.filter((p) => p.category === selectedCategory);
+    const filtered = projectsData.filter((p) => matchesCategory(p, selectedCategory));
     leftCol = filtered.filter((_, idx) => idx % 2 === 0);
     rightCol = filtered.filter((_, idx) => idx % 2 !== 0);
   }
 
   if (limit) {
-    const allFiltered = selectedCategory === 'All' ? projectsData : projectsData.filter((p) => p.category === selectedCategory);
+    const allFiltered = selectedCategory === 'All'
+      ? projectsData
+      : projectsData.filter((p) => matchesCategory(p, selectedCategory));
     const sliced = allFiltered.slice(0, limit);
     leftCol = sliced.filter((_, idx) => idx % 2 === 0);
     rightCol = sliced.filter((_, idx) => idx % 2 !== 0);
@@ -103,7 +136,7 @@ export default function ProjectShowcase({ limit }) {
         {project.title}
       </h2>
       <div className="text-xs sm:text-sm font-sans font-semibold uppercase tracking-[0.2em] text-[#78726e]">
-        {project.category} — {getArea(project)}
+        {(selectedCategory === 'Interior' || selectedCategory === 'Interiors') ? 'INTERIORS' : project.category} — {getArea(project)}
       </div>
     </div>
   );
@@ -173,35 +206,43 @@ export default function ProjectShowcase({ limit }) {
         )}
 
         {/* 2-COLUMN STAGGERED GRID MATCHING ANNOTATED DRAWING */}
-        <motion.div
-          key={selectedCategory}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 lg:gap-20 items-start"
-        >
-          {/* LEFT COLUMN */}
-          <div className="flex flex-col gap-12 sm:gap-16 md:gap-20 w-full">
-            {leftCol.map((project, idx) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                isPriority={idx === 0}
-              />
-            ))}
+        {leftCol.length === 0 && rightCol.length === 0 ? (
+          <div className="py-32 text-center">
+            <p className="text-[#78726e] font-mono text-sm tracking-widest uppercase">
+              No projects currently listed under this category.
+            </p>
           </div>
+        ) : (
+          <motion.div
+            key={selectedCategory}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 lg:gap-20 items-start"
+          >
+            {/* LEFT COLUMN */}
+            <div className="flex flex-col gap-12 sm:gap-16 md:gap-20 w-full">
+              {leftCol.map((project, idx) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  isPriority={idx === 0}
+                />
+              ))}
+            </div>
 
-          {/* RIGHT COLUMN (Staggered Down by md:mt-28) */}
-          <div className="flex flex-col gap-12 sm:gap-16 md:gap-20 w-full md:mt-28 lg:mt-36">
-            {rightCol.map((project, idx) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                isPriority={idx === 0}
-              />
-            ))}
-          </div>
-        </motion.div>
+            {/* RIGHT COLUMN (Staggered Down by md:mt-28) */}
+            <div className="flex flex-col gap-12 sm:gap-16 md:gap-20 w-full md:mt-28 lg:mt-36">
+              {rightCol.map((project, idx) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  isPriority={idx === 0}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* FLOATING BOTTOM-CENTER FILTER PILL BAR - POPS UP ONLY WHEN SCROLLING */}
